@@ -1,0 +1,2 @@
+Fotos de portada (una por anuncio): anuncio-01.jpg ... anuncio-09.jpg
+Fotos de la galeria del detalle: anuncio-01b.jpg, anuncio-01c.jpg, anuncio-01d.jpg, anuncio-01e.jpg

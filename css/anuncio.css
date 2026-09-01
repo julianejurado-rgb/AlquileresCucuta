@@ -1,0 +1,202 @@
+/* ==========================================================================
+   anuncio.css  —  estilos exclusivos de anuncio.html (detalle de publicación)
+   ========================================================================== */
+
+/* ===== Reset básico ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+img { max-width: 100%; display: block; }
+a { color: #0a5; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== Cabecera ===== */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.header-inner {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.main-nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ===== Contenido principal ===== */
+main {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+/* ===== Estados del anuncio ===== */
+.estado {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.estado--disponible { background: #e8f5e9; color: #2e7d32; }
+.estado--reservado  { background: #fff8e1; color: #f57f17; }
+.estado--alquilado  { background: #ffebee; color: #c62828; }
+
+/* ===== Enlace de regreso ===== */
+.volver {
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+
+/* ===== Tarjeta de la publicación ===== */
+.publicacion {
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.publicacion__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ececec;
+}
+
+.publicacion__titulo {
+  flex: 1 1 100%;
+  font-size: 1.5rem;
+}
+
+.publicacion__precio {
+  font-size: 1.15rem;
+  color: #0a5;
+}
+
+.publicacion section {
+  margin-bottom: 1.5rem;
+}
+
+.publicacion h2 {
+  font-size: 1.05rem;
+  margin-bottom: 0.6rem;
+}
+
+/* ===== Galería de fotos ===== */
+.galeria__lista {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.galeria__lista figure {
+  aspect-ratio: 4 / 3;
+  background: #efefef;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.galeria__lista img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== Descripción ===== */
+.publicacion__descripcion p {
+  max-width: 65ch;
+  color: #444;
+}
+
+.publicacion__descripcion p + p {
+  margin-top: 0.6rem;
+}
+
+/* ===== Ficha del inmueble ===== */
+.ficha {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.4rem 1.25rem;
+  font-size: 0.95rem;
+  max-width: 60ch;
+}
+
+.ficha dt {
+  font-weight: 700;
+}
+
+/* ===== Listas de ubicación y condiciones ===== */
+.referencias,
+.condiciones {
+  padding-left: 1.25rem;
+  color: #444;
+  max-width: 65ch;
+}
+
+.referencias li,
+.condiciones li {
+  margin-bottom: 0.35rem;
+}
+
+/* ===== Contacto ===== */
+.contacto {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+}
+
+/* ===== Pie de la publicación ===== */
+.publicacion__pie {
+  margin-bottom: 0;
+  padding-top: 1rem;
+  border-top: 1px solid #ececec;
+  font-size: 0.9rem;
+}
+
+/* ===== Pie de página ===== */
+.site-footer {
+  border-top: 1px solid #dbdbdb;
+  background: #fff;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 480px) {
+  .ficha { grid-template-columns: 1fr; gap: 0.1rem 0; }
+  .ficha dd { margin-bottom: 0.6rem; }
+}

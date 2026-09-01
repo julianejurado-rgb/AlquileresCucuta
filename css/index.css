@@ -1,0 +1,188 @@
+/* ==========================================================================
+   index.css  —  estilos exclusivos de index.html (portada / listado)
+   ========================================================================== */
+
+/* ===== Reset básico ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+img { max-width: 100%; display: block; }
+a { color: #0a5; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== Cabecera ===== */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.header-inner {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.main-nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ===== Contenido principal ===== */
+main {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.intro h1 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+.intro p { margin-bottom: 1.5rem; color: #555; }
+
+/* ===== Buscador y filtros ===== */
+.buscador {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: end;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.campo label { font-size: 0.8rem; font-weight: 700; }
+
+.campo input,
+.campo select {
+  padding: 0.5rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.buscador button {
+  padding: 0.55rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  background: #0a5;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ===== Rejilla de anuncios (3 columnas) ===== */
+.feed h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+
+.grid-anuncios {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.anuncio {
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.anuncio:hover,
+.anuncio:focus-within {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Enlace extendido: el título cubre toda la tarjeta */
+.anuncio__titulo a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.anuncio__foto {
+  aspect-ratio: 1 / 1;
+  background: #efefef;
+}
+
+.anuncio__foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.anuncio__cuerpo {
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.anuncio__titulo { font-size: 1rem; }
+.anuncio__precio { color: #0a5; }
+.anuncio__meta { font-size: 0.85rem; color: #555; }
+.anuncio__estado { margin-top: auto; }
+
+/* ===== Estados del anuncio ===== */
+.estado {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.estado--disponible { background: #e8f5e9; color: #2e7d32; }
+.estado--reservado  { background: #fff8e1; color: #f57f17; }
+.estado--alquilado  { background: #ffebee; color: #c62828; }
+
+/* ===== Pie de página ===== */
+.site-footer {
+  border-top: 1px solid #dbdbdb;
+  background: #fff;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 768px) {
+  .grid-anuncios { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .grid-anuncios { grid-template-columns: 1fr; }
+}
