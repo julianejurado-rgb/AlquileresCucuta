@@ -6,6 +6,17 @@
 window.EC = window.EC || {};
 
 (function (EC) {
+  function marcarPaginaActiva(nav) {
+    var actual = window.location.pathname.split('/').pop() || 'index.html';
+    nav.querySelectorAll('a[href]').forEach(function (enlace) {
+      var href = enlace.getAttribute('href').split('?')[0];
+      if (href === actual) {
+        enlace.classList.add('main-nav__activo');
+        enlace.setAttribute('aria-current', 'page');
+      }
+    });
+  }
+
   function iniciar() {
     var nav = document.getElementById('main-nav');
     if (!nav) return;
@@ -18,13 +29,6 @@ window.EC = window.EC || {};
         html += '<a href="publicar.html">Publicar anuncio</a>';
       }
       html += '<a href="mis-publicaciones.html">Mis publicaciones</a>';
-
-      var noLeidos = EC.datos.contarConversacionesConNoLeidos(usuario.id);
-      html += '<a href="mensajes.html">Mensajes';
-      if (noLeidos > 0) {
-        html += ' <span class="main-nav__badge">' + noLeidos + '</span>';
-      }
-      html += '</a>';
 
       if (usuario.rol === 'administrador') {
         var reportesPendientes = EC.datos.contarReportesPendientes();
@@ -42,6 +46,7 @@ window.EC = window.EC || {};
     }
 
     nav.innerHTML = html;
+    marcarPaginaActiva(nav);
 
     var botonSalir = document.getElementById('cerrar-sesion');
     if (botonSalir) {

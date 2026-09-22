@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Gestiona los datos de tu cuenta en EstudioCúcuta.">
   <title>Mi perfil — EstudioCúcuta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
   <link rel="stylesheet" href="css/perfil.css">
   <script src="js/datos.js" defer></script>
   <script src="js/proteger.js" defer></script>
   <script src="js/nav.js" defer></script>
+  <script src="js/chat-widget.js" defer></script>
   <script src="js/perfil.js" defer></script>
 </head>
 <body>
@@ -47,6 +51,15 @@
         <div class="campo">
           <label for="correo">Correo electrónico</label>
           <input type="email" id="correo" name="correo" required autocomplete="email">
+        </div>
+
+        <div class="campo" id="campo-genero" hidden>
+          <label for="genero">Género</label>
+          <select id="genero" name="genero" required>
+            <option value="">Selecciona una opción</option>
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+          </select>
         </div>
 
         <button type="submit" class="boton boton--primario">Guardar cambios</button>

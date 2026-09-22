@@ -61,6 +61,9 @@
     meta.textContent = EC.util.textoTipo(anuncio.tipo) + ' · Barrio ' + anuncio.barrio + ', ' + EC.util.textoCiudad(anuncio.ciudad);
     cuerpo.appendChild(meta);
 
+    var filaSpecs = EC.util.crearFilaSpecs(anuncio);
+    if (filaSpecs) cuerpo.appendChild(filaSpecs);
+
     var estado = document.createElement('p');
     estado.className = 'anuncio__estado';
     var badge = document.createElement('span');

@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Crea una cuenta en EstudioCúcuta para publicar y guardar anuncios.">
   <title>Crear cuenta — EstudioCúcuta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
   <link rel="stylesheet" href="css/registro.css">
   <script src="js/datos.js" defer></script>
   <script src="js/nav.js" defer></script>
+  <script src="js/chat-widget.js" defer></script>
   <script src="js/registro.js" defer></script>
 </head>
 <body>
@@ -53,6 +57,15 @@
         <div class="campo">
           <label for="confirmar">Confirmar contraseña</label>
           <input type="password" id="confirmar" name="confirmar" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <div class="campo">
+          <label for="genero">Género</label>
+          <select id="genero" name="genero" required>
+            <option value="">Selecciona una opción</option>
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+          </select>
         </div>
 
         <button type="submit" class="boton boton--primario">Crear cuenta</button>

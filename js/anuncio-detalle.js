@@ -116,14 +116,30 @@
     });
   }
 
-  function pintarEstadisticas(anuncio, usuarioActual) {
-    if (!usuarioActual || usuarioActual.id !== anuncio.propietarioId) return;
+  function mostrarFilaOpcional(idFila, idValor, valor, textoSingular, textoPlural) {
+    var fila = document.getElementById(idFila);
+    if (valor === undefined || valor === null || valor === '') {
+      fila.hidden = true;
+      return;
+    }
+    fila.hidden = false;
+    var sufijo = Number(valor) === 1 ? textoSingular : textoPlural;
+    document.getElementById(idValor).textContent = valor + (sufijo || '');
+  }
 
-    document.getElementById('seccion-estadisticas').hidden = false;
-    document.getElementById('stat-visitas').textContent = anuncio.visitas || 0;
+  function pintarFichaOpcional(anuncio) {
+    mostrarFilaOpcional('fila-area', 'pub-area', anuncio.area, ' m²', ' m²');
+    document.getElementById('pub-genero').textContent = EC.util.textoGeneroPermitido(anuncio.generoPermitido);
 
-    var contactos = EC.datos.obtenerConversacionesDeAnuncio(anuncio.id).length;
-    document.getElementById('stat-contactos').textContent = contactos;
+    var filaMascotas = document.getElementById('fila-mascotas');
+    if (anuncio.mascotas === 'si' || anuncio.mascotas === 'no') {
+      filaMascotas.hidden = false;
+      document.getElementById('pub-mascotas').textContent = EC.util.textoMascotas(anuncio.mascotas);
+    } else {
+      filaMascotas.hidden = true;
+    }
+
+    document.getElementById('pub-visualizaciones').textContent = anuncio.visitas || 0;
   }
 
   function pintarReportar(anuncio, usuarioActual) {
@@ -179,8 +195,8 @@
     boton.hidden = false;
     boton.addEventListener('click', function () {
       var conversacion = EC.datos.obtenerOCrearConversacion(anuncio.id, usuarioActual.id);
-      if (conversacion) {
-        window.location.href = 'mensajes.html?id=' + encodeURIComponent(conversacion.id);
+      if (conversacion && EC.chat) {
+        EC.chat.abrirConversacion(conversacion.id);
       }
     });
   }
@@ -209,12 +225,13 @@
       day: 'numeric', month: 'long', year: 'numeric'
     });
 
+    pintarFichaOpcional(anuncio);
+
     var usuarioActual = EC.datos.obtenerUsuarioActual();
 
     pintarContacto(anuncio);
     pintarAcciones(anuncio);
     pintarContactar(anuncio);
-    pintarEstadisticas(anuncio, usuarioActual);
     pintarReportar(anuncio, usuarioActual);
 
     if (!usuarioActual || usuarioActual.id !== anuncio.propietarioId) {

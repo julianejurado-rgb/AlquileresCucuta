@@ -57,6 +57,70 @@ window.EC = window.EC || {};
     return div.innerHTML;
   }
 
+  var ICONOS_SPECS = {
+    area: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+    genero: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>',
+    mascota: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="9.5" r="1.8"/><circle cx="10.5" cy="5.5" r="1.8"/><circle cx="15.5" cy="5.5" r="1.8"/><circle cx="19.5" cy="10.5" r="1.8"/><path d="M6 21c-1.5 0-2.5-1.4-2-2.8.8-2.3 3.1-5.2 8-5.2s7.2 2.9 8 5.2c.5 1.4-.5 2.8-2 2.8-2 0-3-1-6-1s-4 1-6 1z"/></svg>'
+  };
+
+  var TEXTO_GENERO_PERMITIDO = {
+    hombres: 'Solo hombres',
+    mujeres: 'Solo mujeres',
+    todos: 'Todos los géneros'
+  };
+
+  var TEXTO_MASCOTAS = {
+    si: 'Admite mascotas',
+    no: 'No admite mascotas'
+  };
+
+  function textoGeneroPermitido(valor) { return TEXTO_GENERO_PERMITIDO[valor] || TEXTO_GENERO_PERMITIDO.todos; }
+  function textoMascotas(valor) { return TEXTO_MASCOTAS[valor] || ''; }
+
+  /* Fila compacta de specs con ícono (m², género permitido, mascotas)
+     para las tarjetas de anuncio. Devuelve null si el anuncio no tiene
+     ninguno de esos datos "notables" (son todos opcionales u omiten
+     valores neutros como "todos los géneros"). Los íconos son SVG fijos
+     definidos aquí mismo, nunca texto del usuario, así que innerHTML
+     es seguro; los valores del anuncio van por textContent. */
+  function crearFilaSpecs(anuncio) {
+    var specs = [];
+
+    if (anuncio.area !== undefined && anuncio.area !== null && anuncio.area !== '') {
+      specs.push({ icono: ICONOS_SPECS.area, texto: anuncio.area + ' m²' });
+    }
+    if (anuncio.generoPermitido === 'hombres' || anuncio.generoPermitido === 'mujeres') {
+      specs.push({ icono: ICONOS_SPECS.genero, texto: textoGeneroPermitido(anuncio.generoPermitido) });
+    }
+    if (anuncio.mascotas === 'si' || anuncio.mascotas === 'no') {
+      specs.push({ icono: ICONOS_SPECS.mascota, texto: textoMascotas(anuncio.mascotas) });
+    }
+
+    if (specs.length === 0) return null;
+
+    var contenedor = document.createElement('p');
+    contenedor.className = 'anuncio__specs';
+
+    specs.forEach(function (spec) {
+      var item = document.createElement('span');
+      item.className = 'anuncio__specs-item';
+
+      var icono = document.createElement('span');
+      icono.className = 'anuncio__specs-icono';
+      icono.setAttribute('aria-hidden', 'true');
+      icono.innerHTML = spec.icono;
+      item.appendChild(icono);
+
+      var texto = document.createElement('span');
+      texto.textContent = spec.texto;
+      item.appendChild(texto);
+
+      contenedor.appendChild(item);
+    });
+
+    return contenedor;
+  }
+
   function formatearPrecio(numero) {
     var valor = Number(numero) || 0;
     return '$' + valor.toLocaleString('es-CO');
@@ -144,7 +208,7 @@ window.EC = window.EC || {};
     return encontrado;
   }
 
-  function crearUsuario(nombre, correo, contrasena) {
+  function crearUsuario(nombre, correo, contrasena, genero) {
     if (obtenerUsuarioPorCorreo(correo)) {
       return { ok: false, error: 'Ya existe una cuenta registrada con ese correo.' };
     }
@@ -154,6 +218,7 @@ window.EC = window.EC || {};
       nombre: String(nombre).trim(),
       correo: String(correo).trim().toLowerCase(),
       contrasena: hashSimple(contrasena),
+      genero: genero,
       rol: 'usuario',
       bloqueado: false
     };
@@ -304,9 +369,13 @@ window.EC = window.EC || {};
   /* ===== Conversaciones y mensajes =====
      Chat simulado con localStorage: solo funciona dentro de un mismo
      navegador (no hay servidor que reciba mensajes de otra persona en
-     otro computador). Cada conversación queda ligada a un anuncio y
-     al usuario interesado; el otro participante siempre es el dueño
-     del anuncio en ese momento. */
+     otro computador). La conversación es entre dos personas, no por
+     anuncio: si ya existe una conversación entre ese mismo par de
+     usuarios (sin importar desde qué anuncio se originó), contactar de
+     nuevo reabre esa misma conversación en vez de crear una nueva.
+     anuncioId solo queda guardado como referencia del anuncio con el
+     que arrancó la conversación (para mostrar "Sobre: ..." y para el
+     contador de contactos por anuncio). */
 
   function obtenerConversaciones() {
     return leer(CLAVE_CONVERSACIONES, []);
@@ -330,6 +399,12 @@ window.EC = window.EC || {};
     });
   }
 
+  /* Conversaciones que se originaron a partir de este anuncio en
+     particular (se usa para el contador de "contactos" de ese anuncio
+     en Mis publicaciones). Como ahora la conversación es por persona y
+     no por anuncio, si dos personas ya se habían contactado antes por
+     otro anuncio, ese contacto nuevo reabre la conversación vieja y no
+     cuenta aquí; es una aproximación razonable, no un conteo exacto. */
   function obtenerConversacionesDeAnuncio(anuncioId) {
     return obtenerConversaciones().filter(function (conversacion) {
       return conversacion.anuncioId === anuncioId;
@@ -343,9 +418,10 @@ window.EC = window.EC || {};
     var conversaciones = obtenerConversaciones();
     var existente = null;
     conversaciones.forEach(function (conversacion) {
-      if (conversacion.anuncioId === anuncioId && conversacion.interesadoId === interesadoId) {
-        existente = conversacion;
-      }
+      var mismaPareja =
+        (conversacion.propietarioId === anuncio.propietarioId && conversacion.interesadoId === interesadoId) ||
+        (conversacion.propietarioId === interesadoId && conversacion.interesadoId === anuncio.propietarioId);
+      if (mismaPareja) existente = conversacion;
     });
     if (existente) return existente;
 
@@ -359,6 +435,55 @@ window.EC = window.EC || {};
     conversaciones.push(nueva);
     guardarConversaciones(conversaciones);
     return nueva;
+  }
+
+  /* Migración: fusiona conversaciones duplicadas entre el mismo par de
+     personas que hayan quedado de antes de este cambio (cuando existía
+     una conversación distinta por cada anuncio). Se ejecuta una vez al
+     cargar la página; si no hay duplicados no hace nada. De cada grupo
+     conserva la conversación más antigua y le reasigna los mensajes de
+     las demás antes de eliminarlas. */
+  function fusionarConversacionesDuplicadas() {
+    var conversaciones = obtenerConversaciones();
+    if (conversaciones.length < 2) return;
+
+    var grupos = {};
+    conversaciones.forEach(function (conversacion) {
+      var par = [conversacion.propietarioId, conversacion.interesadoId].sort().join('|');
+      if (!grupos[par]) grupos[par] = [];
+      grupos[par].push(conversacion);
+    });
+
+    var mensajes = obtenerMensajes();
+    var idsAEliminar = [];
+    var huboFusion = false;
+
+    Object.keys(grupos).forEach(function (par) {
+      var grupo = grupos[par];
+      if (grupo.length < 2) return;
+      huboFusion = true;
+
+      grupo.sort(function (a, b) { return new Date(a.creada) - new Date(b.creada); });
+      var principal = grupo[0];
+
+      grupo.slice(1).forEach(function (duplicada) {
+        mensajes = mensajes.map(function (mensaje) {
+          if (mensaje.conversacionId !== duplicada.id) return mensaje;
+          var copia = {};
+          for (var clave in mensaje) copia[clave] = mensaje[clave];
+          copia.conversacionId = principal.id;
+          return copia;
+        });
+        idsAEliminar.push(duplicada.id);
+      });
+    });
+
+    if (!huboFusion) return;
+
+    guardarConversaciones(conversaciones.filter(function (conversacion) {
+      return idsAEliminar.indexOf(conversacion.id) === -1;
+    }));
+    guardarMensajes(mensajes);
   }
 
   function obtenerMensajes() {
@@ -490,6 +615,7 @@ window.EC = window.EC || {};
   }
 
   sembrarAdministrador();
+  fusionarConversacionesDuplicadas();
 
   EC.util = {
     escaparHtml: escaparHtml,
@@ -498,7 +624,10 @@ window.EC = window.EC || {};
     textoCiudad: textoCiudad,
     textoEstado: textoEstado,
     textoMotivoReporte: textoMotivoReporte,
+    textoGeneroPermitido: textoGeneroPermitido,
+    textoMascotas: textoMascotas,
     obtenerFotos: obtenerFotos,
+    crearFilaSpecs: crearFilaSpecs,
     MAXIMO_FOTOS: MAXIMO_FOTOS
   };
 

@@ -22,6 +22,11 @@
     document.getElementById('nombre').value = usuarioActual.nombre;
     document.getElementById('correo').value = usuarioActual.correo;
 
+    if (usuarioActual.rol !== 'administrador') {
+      document.getElementById('campo-genero').hidden = false;
+      document.getElementById('genero').value = usuarioActual.genero || '';
+    }
+
     var insignia = document.getElementById('perfil-rol');
     insignia.textContent = usuarioActual.rol === 'administrador' ? 'Administrador' : 'Usuario';
     insignia.className = 'insignia-rol insignia-rol--' + usuarioActual.rol;
@@ -34,6 +39,8 @@
 
       var nombre = document.getElementById('nombre').value.trim();
       var correo = document.getElementById('correo').value.trim();
+      var esAdmin = usuarioActual.rol === 'administrador';
+      var genero = esAdmin ? usuarioActual.genero : document.getElementById('genero').value;
 
       if (nombre.length < 2) {
         mostrarMensaje('mensaje-datos', 'Escribe tu nombre completo.', 'error');
@@ -43,6 +50,10 @@
         mostrarMensaje('mensaje-datos', 'Escribe un correo electrónico válido.', 'error');
         return;
       }
+      if (!esAdmin && !genero) {
+        mostrarMensaje('mensaje-datos', 'Selecciona tu género.', 'error');
+        return;
+      }
 
       var otroConEseCorreo = EC.datos.obtenerUsuarioPorCorreo(correo);
       if (otroConEseCorreo && otroConEseCorreo.id !== usuarioActual.id) {
@@ -50,7 +61,7 @@
         return;
       }
 
-      EC.datos.actualizarUsuario(usuarioActual.id, { nombre: nombre, correo: correo.toLowerCase() });
+      EC.datos.actualizarUsuario(usuarioActual.id, { nombre: nombre, correo: correo.toLowerCase(), genero: genero });
       usuarioActual = EC.datos.obtenerUsuarioPorId(usuarioActual.id);
 
       mostrarMensaje('mensaje-datos', 'Datos actualizados correctamente.', 'exito');

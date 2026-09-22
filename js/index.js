@@ -1,9 +1,9 @@
 /* ==========================================================================
    index.js — renderiza el listado de anuncios (index.html) a partir de
    los anuncios guardados en localStorage, y aplica los filtros de
-   búsqueda (palabra clave, ciudad, precio máximo, tipo) combinados con
-   el toggle "ver solo mis favoritos". Debe cargarse después de
-   datos.js y favoritos.js.
+   búsqueda (palabra clave, ciudad, precio máximo, tipo, género
+   permitido, mascotas) combinados con el toggle "ver solo mis
+   favoritos". Debe cargarse después de datos.js y favoritos.js.
    ========================================================================== */
 
 (function (EC) {
@@ -61,6 +61,9 @@
     meta.textContent = EC.util.textoTipo(anuncio.tipo) + ' · Barrio ' + anuncio.barrio + ', ' + EC.util.textoCiudad(anuncio.ciudad);
     cuerpo.appendChild(meta);
 
+    var filaSpecs = EC.util.crearFilaSpecs(anuncio);
+    if (filaSpecs) cuerpo.appendChild(filaSpecs);
+
     var propietario = EC.datos.obtenerUsuarioPorId(anuncio.propietarioId);
     var autor = document.createElement('p');
     autor.className = 'anuncio__autor';
@@ -101,6 +104,8 @@
       ciudad: document.getElementById('ciudad').value,
       precioMax: document.getElementById('precio').value ? Number(document.getElementById('precio').value) : null,
       tipo: document.getElementById('tipo').value,
+      genero: document.getElementById('genero').value,
+      mascotas: document.getElementById('mascotas').value,
       soloFavoritos: toggleFavoritosActivo()
     };
   }
@@ -110,6 +115,12 @@
     if (criterios.tipo && anuncio.tipo !== criterios.tipo) return false;
     if (criterios.precioMax !== null && Number(anuncio.precio) > criterios.precioMax) return false;
     if (criterios.soloFavoritos && !EC.favoritos.esFavorito(anuncio.id)) return false;
+
+    if (criterios.genero) {
+      var generoAnuncio = anuncio.generoPermitido || 'todos';
+      if (generoAnuncio !== 'todos' && generoAnuncio !== criterios.genero) return false;
+    }
+    if (criterios.mascotas && anuncio.mascotas !== criterios.mascotas) return false;
 
     if (criterios.q) {
       var texto = [
@@ -204,7 +215,7 @@
       TEMPORIZADOR_BUSQUEDA = window.setTimeout(aplicarFiltros, 250);
     });
 
-    ['ciudad', 'precio', 'tipo', 'orden'].forEach(function (id) {
+    ['ciudad', 'precio', 'tipo', 'genero', 'mascotas', 'orden'].forEach(function (id) {
       document.getElementById(id).addEventListener('change', aplicarFiltros);
     });
 

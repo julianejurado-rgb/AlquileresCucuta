@@ -32,6 +32,7 @@
       var correo = document.getElementById('correo').value.trim();
       var contrasena = document.getElementById('contrasena').value;
       var confirmar = document.getElementById('confirmar').value;
+      var genero = document.getElementById('genero').value;
 
       if (nombre.length < 2) {
         mostrarError('Escribe tu nombre completo.');
@@ -49,8 +50,12 @@
         mostrarError('Las contraseñas no coinciden.');
         return;
       }
+      if (!genero) {
+        mostrarError('Selecciona tu género.');
+        return;
+      }
 
-      var resultado = EC.datos.crearUsuario(nombre, correo, contrasena);
+      var resultado = EC.datos.crearUsuario(nombre, correo, contrasena, genero);
       if (!resultado.ok) {
         mostrarError(resultado.error);
         return;
