@@ -6,6 +6,10 @@
   <meta name="description" content="Alquiler de apartaestudios y habitaciones para personas que viven solas en Cúcuta.">
   <title>EstudioCúcuta — Apartaestudios y habitaciones en alquiler</title>
   <link rel="stylesheet" href="css/index.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/favoritos.js" defer></script>
+  <script src="js/index.js" defer></script>
 </head>
 <body>
 
@@ -13,10 +17,8 @@
     <div class="header-inner">
       <a href="index.html" class="logo">EstudioCúcuta</a>
 
-      <nav class="main-nav" aria-label="Navegación principal">
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
         <a href="index.html">Anuncios</a>
-        <a href="publicar.html">Publicar anuncio</a>
-        <a href="mis-publicaciones.html">Mis publicaciones</a>
         <a href="acceder.html">Iniciar sesión</a>
         <a href="registro.html">Registrarse</a>
       </nav>
@@ -32,7 +34,7 @@
         publicados directamente por sus propietarios.
       </p>
 
-      <form class="buscador" role="search" action="#" method="get">
+      <form class="buscador" id="form-filtros" role="search" action="#" method="get">
         <div class="campo">
           <label for="q">Buscar por palabra clave</label>
           <input type="search" id="q" name="q" placeholder="Ej: apartaestudio amoblado">
@@ -68,178 +70,33 @@
           </select>
         </div>
 
-        <button type="submit">Filtrar</button>
+        <button type="submit" class="boton boton--primario">Filtrar</button>
+        <button type="reset" class="boton boton--secundario">Limpiar</button>
       </form>
     </section>
 
     <section class="feed" id="anuncios" aria-labelledby="titulo-anuncios">
-      <h2 id="titulo-anuncios">Anuncios disponibles</h2>
+      <div class="feed__cabecera">
+        <h2 id="titulo-anuncios">Anuncios disponibles</h2>
+        <span id="resultados-contador" class="resultados-contador"></span>
+      </div>
 
-      <ul class="grid-anuncios">
+      <div class="favoritos-bar">
+        <button type="button" id="toggle-favoritos" class="favoritos-bar__toggle" aria-pressed="false">
+          <span class="favoritos-bar__toggle-texto">Ver solo mis favoritos</span>
+        </button>
+        <span id="favoritos-contador" class="favoritos-bar__contador">0 anuncios guardados</span>
+      </div>
 
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-01.jpg" alt="Apartaestudio amoblado en el barrio Caobos">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Apartaestudio amoblado en Caobos</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$720.000</strong> / mes</p>
-              <p class="anuncio__meta">Apartaestudio &middot; Barrio Caobos, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--disponible">Disponible</span>
-              </p>
-            </div>
-          </article>
-        </li>
+      <p id="sin-anuncios" class="sin-anuncios" hidden>
+        Todavía no hay anuncios publicados. <a href="publicar.html">Publica el primero</a>.
+      </p>
 
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-02.jpg" alt="Habitación con baño privado en La Riviera">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Habitación con baño privado en La Riviera</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$480.000</strong> / mes</p>
-              <p class="anuncio__meta">Habitación &middot; Barrio La Riviera, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--disponible">Disponible</span>
-              </p>
-            </div>
-          </article>
-        </li>
+      <p id="sin-resultados" class="sin-anuncios" hidden>
+        Ningún anuncio coincide con esos filtros. <button type="button" id="limpiar-filtros-inline" class="enlace-boton">Limpiar filtros</button>.
+      </p>
 
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-03.jpg" alt="Apartaestudio nuevo en la Avenida Libertadores">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Apartaestudio nuevo en Av. Libertadores</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$950.000</strong> / mes</p>
-              <p class="anuncio__meta">Apartaestudio &middot; Avenida Libertadores, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--reservado">Reservado</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-04.jpg" alt="Cuarto amoblado cerca de la UFPS">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Cuarto amoblado cerca de la UFPS</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$420.000</strong> / mes</p>
-              <p class="anuncio__meta">Habitación &middot; Barrio San Luis, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--disponible">Disponible</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-05.jpg" alt="Apartaestudio con balcón en Quinta Oriental">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Apartaestudio con balcón en Quinta Oriental</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$680.000</strong> / mes</p>
-              <p class="anuncio__meta">Apartaestudio &middot; Barrio Quinta Oriental, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--alquilado">Alquilado</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-06.jpg" alt="Habitación independiente en Prados del Este">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Habitación independiente en Prados del Este</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$510.000</strong> / mes</p>
-              <p class="anuncio__meta">Habitación &middot; Barrio Prados del Este, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--disponible">Disponible</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-07.jpg" alt="Apartamento pequeño en Ciudad Jardín">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Apartamento pequeño en Ciudad Jardín</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$1.100.000</strong> / mes</p>
-              <p class="anuncio__meta">Apartamento pequeño &middot; Barrio Ciudad Jardín, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--disponible">Disponible</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-08.jpg" alt="Cuarto en pensión estudiantil en La Ceiba">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Cuarto en pensión estudiantil en La Ceiba</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$390.000</strong> / mes</p>
-              <p class="anuncio__meta">Habitación &middot; Barrio La Ceiba, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--reservado">Reservado</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-        <li>
-          <article class="anuncio">
-            <figure class="anuncio__foto">
-              <img src="img/anuncio-09.jpg" alt="Apartaestudio con vista en Guaimaral">
-            </figure>
-            <div class="anuncio__cuerpo">
-              <h3 class="anuncio__titulo">
-                <a href="anuncio.html">Apartaestudio con vista en Guaimaral</a>
-              </h3>
-              <p class="anuncio__precio"><strong>$830.000</strong> / mes</p>
-              <p class="anuncio__meta">Apartaestudio &middot; Barrio Guaimaral, Cúcuta</p>
-              <p class="anuncio__estado">
-                <span class="estado estado--disponible">Disponible</span>
-              </p>
-            </div>
-          </article>
-        </li>
-
-      </ul>
+      <ul class="grid-anuncios" id="grid-anuncios"></ul>
     </section>
 
   </main>

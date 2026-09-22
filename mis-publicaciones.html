@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Administra los anuncios que has publicado en EstudioCúcuta.">
+  <title>Mis publicaciones — EstudioCúcuta</title>
+  <link rel="stylesheet" href="css/mis-publicaciones.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/proteger.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/mis-publicaciones.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">EstudioCúcuta</a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="index.html">Anuncios</a>
+        <a href="acceder.html">Iniciar sesión</a>
+        <a href="registro.html">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="feed" aria-labelledby="titulo-mis-anuncios">
+      <div class="feed__cabecera">
+        <h1 id="titulo-mis-anuncios">Mis publicaciones</h1>
+        <a href="publicar.html" id="boton-publicar-nuevo" class="boton boton--primario">Publicar nuevo anuncio</a>
+      </div>
+
+      <p id="sin-anuncios" class="sin-anuncios" hidden>
+        <span id="texto-sin-anuncios">Todavía no has publicado ningún anuncio. <a href="publicar.html">Publica el primero</a>.</span>
+      </p>
+
+      <ul class="grid-anuncios" id="grid-mis-anuncios"></ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EstudioCúcuta — Proyecto académico.</p>
+  </footer>
+
+</body>
+</html>

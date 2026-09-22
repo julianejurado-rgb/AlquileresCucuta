@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gestiona los datos de tu cuenta en EstudioCúcuta.">
+  <title>Mi perfil — EstudioCúcuta</title>
+  <link rel="stylesheet" href="css/perfil.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/proteger.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/perfil.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">EstudioCúcuta</a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="index.html">Anuncios</a>
+        <a href="acceder.html">Iniciar sesión</a>
+        <a href="registro.html">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pagina-perfil">
+
+    <h1>Mi perfil</h1>
+
+    <div class="tarjeta-perfil">
+      <h2>Datos de la cuenta</h2>
+
+      <p class="perfil__meta">
+        Rol: <span id="perfil-rol" class="insignia-rol"></span>
+      </p>
+
+      <p id="mensaje-datos" class="mensaje" hidden></p>
+
+      <form id="form-datos" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" required minlength="2" autocomplete="name">
+        </div>
+
+        <div class="campo">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" required autocomplete="email">
+        </div>
+
+        <button type="submit" class="boton boton--primario">Guardar cambios</button>
+      </form>
+    </div>
+
+    <div class="tarjeta-perfil">
+      <h2>Cambiar contraseña</h2>
+
+      <p id="mensaje-contrasena" class="mensaje" hidden></p>
+
+      <form id="form-contrasena" novalidate>
+        <div class="campo">
+          <label for="contrasena-actual">Contraseña actual</label>
+          <input type="password" id="contrasena-actual" name="contrasena-actual" autocomplete="current-password">
+        </div>
+
+        <div class="campo">
+          <label for="contrasena-nueva">Contraseña nueva</label>
+          <input type="password" id="contrasena-nueva" name="contrasena-nueva" minlength="6" autocomplete="new-password">
+        </div>
+
+        <div class="campo">
+          <label for="contrasena-confirmar">Confirmar contraseña nueva</label>
+          <input type="password" id="contrasena-confirmar" name="contrasena-confirmar" minlength="6" autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="boton boton--primario">Cambiar contraseña</button>
+      </form>
+    </div>
+
+    <div class="tarjeta-perfil tarjeta-perfil--peligro" id="zona-peligro">
+      <h2>Eliminar cuenta</h2>
+      <p class="perfil__ayuda">
+        Esto elimina tu cuenta y todos los anuncios que hayas publicado. Esta acción no se puede deshacer.
+      </p>
+      <p id="nota-admin" class="mensaje mensaje--info" hidden>
+        Las cuentas de administrador no se pueden eliminar desde aquí.
+      </p>
+      <button type="button" id="eliminar-cuenta" class="boton boton--peligro">Eliminar mi cuenta</button>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EstudioCúcuta — Proyecto académico.</p>
+  </footer>
+
+</body>
+</html>

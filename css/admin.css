@@ -1,0 +1,226 @@
+/* ==========================================================================
+   admin.css  —  estilos exclusivos de admin.html (panel de administración)
+   ========================================================================== */
+
+/* ===== Reset básico ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* El atributo hidden debe ganar siempre, incluso sobre clases que fijan
+   su propio display (flex, inline-flex, grid...). */
+[hidden] { display: none !important; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+a { color: #0a5; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== Cabecera ===== */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.header-inner {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.main-nav__usuario {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+}
+
+.main-nav__usuario:hover {
+  color: #0a5;
+  text-decoration: underline;
+}
+
+.main-nav__badge {
+  display: inline-block;
+  min-width: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #c62828;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.1rem;
+}
+
+.main-nav__salir {
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #1a1a1a;
+}
+
+.main-nav__salir:hover { border-color: #c62828; color: #c62828; }
+
+/* ===== Contenido principal ===== */
+main {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.panel h1 { font-size: 1.3rem; margin-bottom: 0.4rem; }
+
+.panel__ayuda {
+  color: #555;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== Pestañas ===== */
+.panel__tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #dbdbdb;
+  margin-bottom: 1.25rem;
+}
+
+.panel__tab {
+  padding: 0.6rem 1rem;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.panel__tab--activo {
+  color: #0a5;
+  border-bottom-color: #0a5;
+}
+
+/* ===== Sin resultados ===== */
+.sin-anuncios {
+  background: #fff;
+  border: 1px dashed #bbb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #555;
+}
+
+/* ===== Tabla ===== */
+.tabla-scroll {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ececec;
+  white-space: nowrap;
+}
+
+.tabla tr:last-child td { border-bottom: none; }
+
+.tabla th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #777;
+}
+
+.tabla__acciones {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tabla__nota {
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+}
+
+/* ===== Estados del anuncio ===== */
+.estado {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.estado--disponible { background: #e8f5e9; color: #2e7d32; }
+.estado--reservado  { background: #fff8e1; color: #f57f17; }
+.estado--alquilado  { background: #ffebee; color: #c62828; }
+
+/* ===== Botones ===== */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.boton--secundario { background: #fff; border-color: #bbb; color: #1a1a1a; }
+.boton--secundario:hover { border-color: #0a5; color: #0a5; text-decoration: none; }
+
+.boton--peligro { background: #fff; border-color: #c62828; color: #c62828; }
+.boton--peligro:hover { background: #fdecea; text-decoration: none; }
+
+/* ===== Pie de página ===== */
+.site-footer {
+  border-top: 1px solid #dbdbdb;
+  background: #fff;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 0.85rem;
+  color: #777;
+}

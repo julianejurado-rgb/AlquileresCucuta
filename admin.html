@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panel de administración de EstudioCúcuta: modera anuncios y gestiona usuarios.">
+  <title>Panel de administración — EstudioCúcuta</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/proteger.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">EstudioCúcuta</a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="index.html">Anuncios</a>
+        <a href="acceder.html">Iniciar sesión</a>
+        <a href="registro.html">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="panel" aria-labelledby="titulo-admin">
+      <h1 id="titulo-admin">Panel de administración</h1>
+      <p class="panel__ayuda">Como administrador puedes moderar cualquier anuncio y gestionar las cuentas de usuario.</p>
+
+      <div class="panel__tabs" role="tablist">
+        <button type="button" class="panel__tab panel__tab--activo" id="pestana-anuncios" data-tab="anuncios">
+          Anuncios (<span id="conteo-anuncios">0</span>)
+        </button>
+        <button type="button" class="panel__tab" id="pestana-usuarios" data-tab="usuarios">
+          Usuarios (<span id="conteo-usuarios">0</span>)
+        </button>
+      </div>
+
+      <section id="tab-anuncios" class="panel__tab-contenido">
+        <p id="sin-anuncios-admin" class="sin-anuncios" hidden>No hay anuncios publicados todavía.</p>
+        <div class="tabla-scroll">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Propietario</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-anuncios"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-usuarios" class="panel__tab-contenido" hidden>
+        <div class="tabla-scroll">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-usuarios"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EstudioCúcuta — Proyecto académico.</p>
+  </footer>
+
+</body>
+</html>

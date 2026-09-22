@@ -1,0 +1,274 @@
+/* ==========================================================================
+   mensajes.css  —  estilos exclusivos de mensajes.html (bandeja y chat)
+   ========================================================================== */
+
+/* ===== Reset básico ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* El atributo hidden debe ganar siempre, incluso sobre clases que fijan
+   su propio display (flex, inline-flex, grid...). */
+[hidden] { display: none !important; }
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+
+a { color: #0a5; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ===== Cabecera ===== */
+.site-header {
+  background: #fff;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.header-inner {
+  max-width: 960px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 0.75rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.main-nav__usuario {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+}
+
+.main-nav__usuario:hover {
+  color: #0a5;
+  text-decoration: underline;
+}
+
+.main-nav__badge {
+  display: inline-block;
+  min-width: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #c62828;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.1rem;
+}
+
+.main-nav__salir {
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #1a1a1a;
+}
+
+.main-nav__salir:hover { border-color: #c62828; color: #c62828; }
+
+/* ===== Contenido principal ===== */
+.pagina-mensajes {
+  max-width: 720px;
+  width: 92%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.pagina-mensajes h1 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+/* ===== Sin resultados ===== */
+.sin-anuncios {
+  background: #fff;
+  border: 1px dashed #bbb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #555;
+}
+
+/* ===== Lista de conversaciones ===== */
+.conversaciones {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.conversacion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  color: inherit;
+}
+
+.conversacion:hover {
+  border-color: #0a5;
+  text-decoration: none;
+}
+
+.conversacion__cabecera {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.conversacion__nombre {
+  font-weight: 700;
+}
+
+.conversacion__punto {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #c62828;
+  display: inline-block;
+}
+
+.conversacion__anuncio {
+  font-size: 0.85rem;
+  color: #0a5;
+}
+
+.conversacion__previa {
+  font-size: 0.85rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== Enlace de regreso ===== */
+.volver {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* ===== Hilo de conversación ===== */
+.hilo__meta {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.hilo__mensajes {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 50vh;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.burbuja {
+  max-width: 75%;
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.burbuja p { white-space: pre-line; }
+
+.burbuja time {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.burbuja--ajena {
+  align-self: flex-start;
+  background: #f1f1f1;
+  color: #1a1a1a;
+}
+
+.burbuja--propia {
+  align-self: flex-end;
+  background: #0a5;
+  color: #fff;
+}
+
+/* ===== Formulario de mensaje ===== */
+#form-mensaje {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+#form-mensaje textarea {
+  flex: 1;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font: inherit;
+  resize: vertical;
+}
+
+/* ===== Botones ===== */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.boton--primario {
+  background: #0a5;
+  color: #fff;
+}
+
+.boton--primario:hover { background: #094; text-decoration: none; }
+
+/* ===== Pie de página ===== */
+.site-footer {
+  border-top: 1px solid #dbdbdb;
+  background: #fff;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 480px) {
+  #form-mensaje { flex-direction: column; align-items: stretch; }
+}

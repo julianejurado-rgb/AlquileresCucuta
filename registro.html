@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crea una cuenta en EstudioCúcuta para publicar y guardar anuncios.">
+  <title>Crear cuenta — EstudioCúcuta</title>
+  <link rel="stylesheet" href="css/registro.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/registro.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">EstudioCúcuta</a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="index.html">Anuncios</a>
+        <a href="acceder.html">Iniciar sesión</a>
+        <a href="registro.html">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pagina-formulario">
+
+    <section class="tarjeta-formulario" aria-labelledby="titulo-registro">
+      <h1 id="titulo-registro">Crear cuenta</h1>
+      <p class="tarjeta-formulario__ayuda">
+        Regístrate para publicar tus propios anuncios y administrarlos.
+      </p>
+
+      <p id="mensaje-error" class="mensaje mensaje--error" hidden></p>
+
+      <form id="form-registro" novalidate>
+        <div class="campo">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" required minlength="2" autocomplete="name">
+        </div>
+
+        <div class="campo">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" required autocomplete="email">
+        </div>
+
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input type="password" id="contrasena" name="contrasena" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <div class="campo">
+          <label for="confirmar">Confirmar contraseña</label>
+          <input type="password" id="confirmar" name="confirmar" required minlength="6" autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="boton boton--primario">Crear cuenta</button>
+      </form>
+
+      <p class="tarjeta-formulario__pie">
+        ¿Ya tienes cuenta? <a href="acceder.html">Inicia sesión</a>
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EstudioCúcuta — Proyecto académico.</p>
+  </footer>
+
+</body>
+</html>

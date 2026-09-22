@@ -5,6 +5,10 @@
 /* ===== Reset básico ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* El atributo hidden debe ganar siempre, incluso sobre clases que fijan
+   su propio display (flex, inline-flex, grid...). */
+[hidden] { display: none !important; }
+
 body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;
@@ -42,9 +46,47 @@ a:hover { text-decoration: underline; }
 
 .main-nav {
   display: flex;
+  align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
 }
+
+.main-nav__usuario {
+  font-size: 0.9rem;
+  color: #555;
+  text-decoration: none;
+}
+
+.main-nav__usuario:hover {
+  color: #0a5;
+  text-decoration: underline;
+}
+
+.main-nav__badge {
+  display: inline-block;
+  min-width: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #c62828;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.1rem;
+}
+
+.main-nav__salir {
+  border: 1px solid #bbb;
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #1a1a1a;
+}
+
+.main-nav__salir:hover { border-color: #c62828; color: #c62828; }
 
 /* ===== Contenido principal ===== */
 main {
@@ -72,6 +114,54 @@ main {
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
 }
+
+/* ===== Sin resultados ===== */
+.sin-anuncios {
+  background: #fff;
+  border: 1px dashed #bbb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #555;
+}
+
+/* ===== Botones ===== */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.boton--primario {
+  background: #0a5;
+  color: #fff;
+}
+
+.boton--primario:hover { background: #094; text-decoration: none; }
+
+.boton--secundario {
+  background: #fff;
+  border-color: #bbb;
+  color: #1a1a1a;
+}
+
+.boton--secundario:hover { border-color: #0a5; color: #0a5; text-decoration: none; }
+
+.boton--peligro {
+  background: #fff;
+  border-color: #c62828;
+  color: #c62828;
+}
+
+.boton--peligro:hover { background: #fdecea; text-decoration: none; }
 
 /* ===== Tarjeta de la publicación ===== */
 .publicacion {
@@ -101,6 +191,37 @@ main {
   color: #0a5;
 }
 
+.publicacion__acciones-propietario {
+  flex: 1 1 100%;
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ===== Botón de favorito (detalle) ===== */
+.favorito-btn--detalle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #bbb;
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #1a1a1a;
+}
+
+.favorito-btn--detalle:hover { border-color: #c62828; }
+
+.favorito-btn--detalle.favorito-btn--activo {
+  background: #fdecea;
+  border-color: #c62828;
+  color: #c62828;
+}
+
+.favorito-btn--detalle .favorito-btn__icono { font-size: 1.05rem; }
+
 .publicacion section {
   margin-bottom: 1.5rem;
 }
@@ -110,23 +231,16 @@ main {
   margin-bottom: 0.6rem;
 }
 
-/* ===== Galería de fotos ===== */
-.galeria__lista {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.galeria__lista figure {
-  aspect-ratio: 4 / 3;
+/* ===== Foto principal ===== */
+.publicacion__foto {
+  aspect-ratio: 16 / 9;
   background: #efefef;
   border-radius: 6px;
   overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
-.galeria__lista img {
+.publicacion__foto img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -136,10 +250,7 @@ main {
 .publicacion__descripcion p {
   max-width: 65ch;
   color: #444;
-}
-
-.publicacion__descripcion p + p {
-  margin-top: 0.6rem;
+  white-space: pre-line;
 }
 
 /* ===== Ficha del inmueble ===== */
@@ -155,19 +266,6 @@ main {
   font-weight: 700;
 }
 
-/* ===== Listas de ubicación y condiciones ===== */
-.referencias,
-.condiciones {
-  padding-left: 1.25rem;
-  color: #444;
-  max-width: 65ch;
-}
-
-.referencias li,
-.condiciones li {
-  margin-bottom: 0.35rem;
-}
-
 /* ===== Contacto ===== */
 .contacto {
   font-style: normal;
@@ -175,14 +273,14 @@ main {
   flex-direction: column;
   gap: 0.3rem;
   font-size: 0.95rem;
+  margin-bottom: 1rem;
 }
 
-/* ===== Pie de la publicación ===== */
-.publicacion__pie {
-  margin-bottom: 0;
-  padding-top: 1rem;
-  border-top: 1px solid #ececec;
-  font-size: 0.9rem;
+#pub-contactar { margin-top: 0.25rem; }
+
+.contacto__ayuda {
+  font-size: 0.85rem;
+  color: #777;
 }
 
 /* ===== Pie de página ===== */

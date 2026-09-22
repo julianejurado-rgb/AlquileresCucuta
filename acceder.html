@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inicia sesión en EstudioCúcuta para publicar y administrar tus anuncios.">
+  <title>Iniciar sesión — EstudioCúcuta</title>
+  <link rel="stylesheet" href="css/acceder.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/acceder.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">EstudioCúcuta</a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="index.html">Anuncios</a>
+        <a href="acceder.html">Iniciar sesión</a>
+        <a href="registro.html">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pagina-formulario">
+
+    <section class="tarjeta-formulario" aria-labelledby="titulo-acceder">
+      <h1 id="titulo-acceder">Iniciar sesión</h1>
+
+      <p id="mensaje-error" class="mensaje mensaje--error" hidden></p>
+
+      <form id="form-acceder" novalidate>
+        <div class="campo">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" required autocomplete="email">
+        </div>
+
+        <div class="campo">
+          <label for="contrasena">Contraseña</label>
+          <input type="password" id="contrasena" name="contrasena" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="boton boton--primario">Iniciar sesión</button>
+      </form>
+
+      <p class="tarjeta-formulario__pie">
+        ¿No tienes cuenta? <a href="registro.html">Regístrate</a>
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EstudioCúcuta — Proyecto académico.</p>
+  </footer>
+
+</body>
+</html>
