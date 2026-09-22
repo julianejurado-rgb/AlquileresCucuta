@@ -28,9 +28,10 @@
 
     var figura = document.createElement('figure');
     figura.className = 'anuncio__foto';
-    if (anuncio.foto) {
+    var fotos = EC.util.obtenerFotos(anuncio);
+    if (fotos.length > 0) {
       var img = document.createElement('img');
-      img.src = anuncio.foto;
+      img.src = fotos[0];
       img.alt = anuncio.titulo;
       figura.appendChild(img);
     } else {
@@ -63,7 +64,15 @@
     var propietario = EC.datos.obtenerUsuarioPorId(anuncio.propietarioId);
     var autor = document.createElement('p');
     autor.className = 'anuncio__autor';
-    autor.textContent = 'Publicado por ' + (propietario ? propietario.nombre : 'un usuario eliminado');
+    if (propietario) {
+      autor.textContent = 'Publicado por ';
+      var enlaceAutor = document.createElement('a');
+      enlaceAutor.href = 'propietario.html?id=' + encodeURIComponent(propietario.id);
+      enlaceAutor.textContent = propietario.nombre;
+      autor.appendChild(enlaceAutor);
+    } else {
+      autor.textContent = 'Publicado por un usuario eliminado';
+    }
     cuerpo.appendChild(autor);
 
     var estado = document.createElement('p');
@@ -116,6 +125,20 @@
     return true;
   }
 
+  function ordenarAnuncios(lista, orden) {
+    var copia = lista.slice();
+    if (orden === 'precio-asc') {
+      copia.sort(function (a, b) { return Number(a.precio) - Number(b.precio); });
+    } else if (orden === 'precio-desc') {
+      copia.sort(function (a, b) { return Number(b.precio) - Number(a.precio); });
+    } else if (orden === 'antiguos') {
+      copia.sort(function (a, b) { return new Date(a.fechaPublicacion) - new Date(b.fechaPublicacion); });
+    } else {
+      copia.sort(function (a, b) { return new Date(b.fechaPublicacion) - new Date(a.fechaPublicacion); });
+    }
+    return copia;
+  }
+
   function actualizarContadorResultados(mostrados, total) {
     var contador = document.getElementById('resultados-contador');
     if (!contador) return;
@@ -153,7 +176,8 @@
     var filtrados = TODOS_LOS_ANUNCIOS.filter(function (anuncio) {
       return coincideConCriterios(anuncio, criterios);
     });
-    pintar(filtrados);
+    var orden = document.getElementById('orden');
+    pintar(ordenarAnuncios(filtrados, orden ? orden.value : ''));
   }
 
   function limpiarFiltros() {
@@ -180,7 +204,7 @@
       TEMPORIZADOR_BUSQUEDA = window.setTimeout(aplicarFiltros, 250);
     });
 
-    ['ciudad', 'precio', 'tipo'].forEach(function (id) {
+    ['ciudad', 'precio', 'tipo', 'orden'].forEach(function (id) {
       document.getElementById(id).addEventListener('change', aplicarFiltros);
     });
 

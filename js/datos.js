@@ -13,6 +13,8 @@ window.EC = window.EC || {};
   var CLAVE_SESION = 'ec_sesion_id';
   var CLAVE_CONVERSACIONES = 'ec_conversaciones';
   var CLAVE_MENSAJES = 'ec_mensajes';
+  var CLAVE_REPORTES = 'ec_reportes';
+  var MAXIMO_FOTOS = 10;
 
   function leer(clave, porDefecto) {
     try {
@@ -78,9 +80,27 @@ window.EC = window.EC || {};
     alquilado: 'Alquilado'
   };
 
+  var TEXTO_MOTIVO_REPORTE = {
+    fraudulento: 'Anuncio fraudulento',
+    'informacion-falsa': 'Información falsa',
+    'contenido-inapropiado': 'Contenido inapropiado',
+    'precio-enganoso': 'Precio engañoso',
+    otro: 'Otro motivo'
+  };
+
   function textoTipo(valor) { return TEXTO_TIPO[valor] || valor; }
   function textoCiudad(valor) { return TEXTO_CIUDAD[valor] || valor; }
   function textoEstado(valor) { return TEXTO_ESTADO[valor] || valor; }
+  function textoMotivoReporte(valor) { return TEXTO_MOTIVO_REPORTE[valor] || valor; }
+
+  /* Devuelve siempre un arreglo de fotos, sin importar si el anuncio
+     todavía tiene el campo viejo "foto" (una sola) o el nuevo "fotos"
+     (hasta 10). Así las páginas no necesitan saber cuál usa cada uno. */
+  function obtenerFotos(anuncio) {
+    if (anuncio.fotos && anuncio.fotos.length) return anuncio.fotos;
+    if (anuncio.foto) return [anuncio.foto];
+    return [];
+  }
 
   /* ===== Usuarios ===== */
 
@@ -170,8 +190,15 @@ window.EC = window.EC || {};
   }
 
   function eliminarUsuario(id) {
+    var anunciosDelUsuario = obtenerAnuncios()
+      .filter(function (anuncio) { return anuncio.propietarioId === id; })
+      .map(function (anuncio) { return anuncio.id; });
+
     guardarUsuarios(obtenerUsuarios().filter(function (usuario) { return usuario.id !== id; }));
     guardarAnuncios(obtenerAnuncios().filter(function (anuncio) { return anuncio.propietarioId !== id; }));
+    guardarReportes(obtenerReportes().filter(function (reporte) {
+      return reporte.reportadoPorId !== id && anunciosDelUsuario.indexOf(reporte.anuncioId) === -1;
+    }));
   }
 
   /* ===== Sesión ===== */
@@ -213,6 +240,10 @@ window.EC = window.EC || {};
     guardar(CLAVE_ANUNCIOS, anuncios);
   }
 
+  function obtenerAnunciosDeUsuario(usuarioId) {
+    return obtenerAnuncios().filter(function (anuncio) { return anuncio.propietarioId === usuarioId; });
+  }
+
   function obtenerAnuncioPorId(id) {
     var encontrado = null;
     obtenerAnuncios().forEach(function (anuncio) {
@@ -250,6 +281,24 @@ window.EC = window.EC || {};
 
   function eliminarAnuncio(id) {
     guardarAnuncios(obtenerAnuncios().filter(function (anuncio) { return anuncio.id !== id; }));
+    guardarReportes(obtenerReportes().filter(function (reporte) { return reporte.anuncioId !== id; }));
+  }
+
+  /* Suma una visita al contador del anuncio. Quien llama decide cuándo
+     (por ejemplo, anuncio-detalle.js no cuenta las visitas del propio
+     dueño para no inflar su propia estadística). */
+  function registrarVisita(anuncioId) {
+    var anuncios = obtenerAnuncios();
+    var actualizado = false;
+    anuncios = anuncios.map(function (anuncio) {
+      if (anuncio.id !== anuncioId) return anuncio;
+      actualizado = true;
+      var copia = {};
+      for (var clave in anuncio) copia[clave] = anuncio[clave];
+      copia.visitas = (copia.visitas || 0) + 1;
+      return copia;
+    });
+    if (actualizado) guardarAnuncios(anuncios);
   }
 
   /* ===== Conversaciones y mensajes =====
@@ -278,6 +327,12 @@ window.EC = window.EC || {};
   function obtenerConversacionesDeUsuario(usuarioId) {
     return obtenerConversaciones().filter(function (conversacion) {
       return conversacion.propietarioId === usuarioId || conversacion.interesadoId === usuarioId;
+    });
+  }
+
+  function obtenerConversacionesDeAnuncio(anuncioId) {
+    return obtenerConversaciones().filter(function (conversacion) {
+      return conversacion.anuncioId === anuncioId;
     });
   }
 
@@ -366,6 +421,74 @@ window.EC = window.EC || {};
     return contador;
   }
 
+  /* ===== Reportes =====
+     Cuando un usuario reporta un anuncio, queda "pendiente" hasta que
+     un administrador lo revise desde el panel admin. */
+
+  function obtenerReportes() {
+    return leer(CLAVE_REPORTES, []);
+  }
+
+  function guardarReportes(reportes) {
+    guardar(CLAVE_REPORTES, reportes);
+  }
+
+  function obtenerReportePorId(id) {
+    var encontrado = null;
+    obtenerReportes().forEach(function (reporte) {
+      if (reporte.id === id) encontrado = reporte;
+    });
+    return encontrado;
+  }
+
+  function obtenerReportesPendientes() {
+    return obtenerReportes().filter(function (reporte) { return reporte.estado === 'pendiente'; });
+  }
+
+  function contarReportesPendientes() {
+    return obtenerReportesPendientes().length;
+  }
+
+  function yaReportado(anuncioId, usuarioId) {
+    return obtenerReportes().some(function (reporte) {
+      return reporte.anuncioId === anuncioId && reporte.reportadoPorId === usuarioId && reporte.estado === 'pendiente';
+    });
+  }
+
+  function crearReporte(anuncioId, reportadoPorId, motivo, descripcion) {
+    if (yaReportado(anuncioId, reportadoPorId)) {
+      return { ok: false, error: 'Ya reportaste este anuncio. Está pendiente de revisión.' };
+    }
+    var reportes = obtenerReportes();
+    var reporte = {
+      id: generarId('reporte'),
+      anuncioId: anuncioId,
+      reportadoPorId: reportadoPorId,
+      motivo: motivo,
+      descripcion: String(descripcion || '').trim(),
+      fecha: new Date().toISOString(),
+      estado: 'pendiente'
+    };
+    reportes.push(reporte);
+    guardarReportes(reportes);
+    return { ok: true, reporte: reporte };
+  }
+
+  function marcarReporteResuelto(id) {
+    var reportes = obtenerReportes();
+    var actualizado = false;
+    reportes = reportes.map(function (reporte) {
+      if (reporte.id !== id) return reporte;
+      actualizado = true;
+      var copia = {};
+      for (var clave in reporte) copia[clave] = reporte[clave];
+      copia.estado = 'resuelto';
+      return copia;
+    });
+    if (actualizado) guardarReportes(reportes);
+    return actualizado;
+  }
+
   sembrarAdministrador();
 
   EC.util = {
@@ -373,7 +496,10 @@ window.EC = window.EC || {};
     formatearPrecio: formatearPrecio,
     textoTipo: textoTipo,
     textoCiudad: textoCiudad,
-    textoEstado: textoEstado
+    textoEstado: textoEstado,
+    textoMotivoReporte: textoMotivoReporte,
+    obtenerFotos: obtenerFotos,
+    MAXIMO_FOTOS: MAXIMO_FOTOS
   };
 
   EC.datos = {
@@ -390,16 +516,26 @@ window.EC = window.EC || {};
     obtenerUsuarioActual: obtenerUsuarioActual,
     obtenerAnuncios: obtenerAnuncios,
     obtenerAnunciosPublicos: obtenerAnunciosPublicos,
+    obtenerAnunciosDeUsuario: obtenerAnunciosDeUsuario,
     obtenerAnuncioPorId: obtenerAnuncioPorId,
     crearAnuncio: crearAnuncio,
     actualizarAnuncio: actualizarAnuncio,
     eliminarAnuncio: eliminarAnuncio,
+    registrarVisita: registrarVisita,
     obtenerConversacionPorId: obtenerConversacionPorId,
     obtenerConversacionesDeUsuario: obtenerConversacionesDeUsuario,
+    obtenerConversacionesDeAnuncio: obtenerConversacionesDeAnuncio,
     obtenerOCrearConversacion: obtenerOCrearConversacion,
     obtenerMensajesDeConversacion: obtenerMensajesDeConversacion,
     enviarMensaje: enviarMensaje,
     marcarConversacionLeida: marcarConversacionLeida,
-    contarConversacionesConNoLeidos: contarConversacionesConNoLeidos
+    contarConversacionesConNoLeidos: contarConversacionesConNoLeidos,
+    obtenerReportes: obtenerReportes,
+    obtenerReportePorId: obtenerReportePorId,
+    obtenerReportesPendientes: obtenerReportesPendientes,
+    contarReportesPendientes: contarReportesPendientes,
+    yaReportado: yaReportado,
+    crearReporte: crearReporte,
+    marcarReporteResuelto: marcarReporteResuelto
   };
 })(window.EC);

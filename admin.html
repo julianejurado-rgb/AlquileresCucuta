@@ -38,6 +38,9 @@
         <button type="button" class="panel__tab" id="pestana-usuarios" data-tab="usuarios">
           Usuarios (<span id="conteo-usuarios">0</span>)
         </button>
+        <button type="button" class="panel__tab" id="pestana-reportes" data-tab="reportes">
+          Reportes pendientes (<span id="conteo-reportes">0</span>)
+        </button>
       </div>
 
       <section id="tab-anuncios" class="panel__tab-contenido">
@@ -71,6 +74,25 @@
               </tr>
             </thead>
             <tbody id="cuerpo-tabla-usuarios"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-reportes" class="panel__tab-contenido" hidden>
+        <p id="sin-reportes" class="sin-anuncios" hidden>No hay reportes pendientes por revisar.</p>
+        <div class="tabla-scroll">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Anuncio</th>
+                <th>Motivo</th>
+                <th>Detalles</th>
+                <th>Reportado por</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-reportes"></tbody>
           </table>
         </div>
       </section>

@@ -21,7 +21,11 @@
     }
 
     var linea1 = document.createElement('span');
-    linea1.textContent = 'Propietario: ' + propietario.nombre;
+    linea1.textContent = 'Propietario: ';
+    var enlacePropietario = document.createElement('a');
+    enlacePropietario.href = 'propietario.html?id=' + encodeURIComponent(propietario.id);
+    enlacePropietario.textContent = propietario.nombre;
+    linea1.appendChild(enlacePropietario);
     contacto.appendChild(linea1);
 
     var linea2 = document.createElement('span');
@@ -69,6 +73,98 @@
     });
   }
 
+  function pintarGaleria(anuncio) {
+    var contenedor = document.getElementById('pub-foto-contenedor');
+    var fotoPrincipal = document.getElementById('pub-foto');
+    var miniaturas = document.getElementById('pub-galeria-miniaturas');
+    var fotos = EC.util.obtenerFotos(anuncio);
+
+    miniaturas.innerHTML = '';
+
+    if (fotos.length === 0) {
+      contenedor.hidden = true;
+      return;
+    }
+    contenedor.hidden = false;
+
+    fotoPrincipal.src = fotos[0];
+    fotoPrincipal.alt = anuncio.titulo;
+
+    if (fotos.length === 1) return;
+
+    fotos.forEach(function (foto, indice) {
+      var li = document.createElement('li');
+      var boton = document.createElement('button');
+      boton.type = 'button';
+      boton.className = 'miniatura' + (indice === 0 ? ' miniatura--activa' : '');
+
+      var img = document.createElement('img');
+      img.src = foto;
+      img.alt = 'Foto ' + (indice + 1) + ' de ' + anuncio.titulo;
+      boton.appendChild(img);
+
+      boton.addEventListener('click', function () {
+        fotoPrincipal.src = foto;
+        miniaturas.querySelectorAll('.miniatura').forEach(function (m) {
+          m.classList.remove('miniatura--activa');
+        });
+        boton.classList.add('miniatura--activa');
+      });
+
+      li.appendChild(boton);
+      miniaturas.appendChild(li);
+    });
+  }
+
+  function pintarEstadisticas(anuncio, usuarioActual) {
+    if (!usuarioActual || usuarioActual.id !== anuncio.propietarioId) return;
+
+    document.getElementById('seccion-estadisticas').hidden = false;
+    document.getElementById('stat-visitas').textContent = anuncio.visitas || 0;
+
+    var contactos = EC.datos.obtenerConversacionesDeAnuncio(anuncio.id).length;
+    document.getElementById('stat-contactos').textContent = contactos;
+  }
+
+  function pintarReportar(anuncio, usuarioActual) {
+    var boton = document.getElementById('pub-reportar-boton');
+    var mensaje = document.getElementById('pub-reportar-mensaje');
+    var formulario = document.getElementById('form-reportar');
+
+    if (!usuarioActual || usuarioActual.id === anuncio.propietarioId) return;
+
+    if (EC.datos.yaReportado(anuncio.id, usuarioActual.id)) {
+      mensaje.textContent = 'Ya reportaste este anuncio. Está pendiente de revisión.';
+      mensaje.hidden = false;
+      return;
+    }
+
+    boton.hidden = false;
+    boton.addEventListener('click', function () {
+      boton.hidden = true;
+      formulario.hidden = false;
+    });
+
+    document.getElementById('reportar-cancelar').addEventListener('click', function () {
+      formulario.hidden = true;
+      boton.hidden = false;
+    });
+
+    formulario.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      var motivo = document.getElementById('reportar-motivo').value;
+      var descripcion = document.getElementById('reportar-descripcion').value;
+      if (!motivo) return;
+
+      var resultado = EC.datos.crearReporte(anuncio.id, usuarioActual.id, motivo, descripcion);
+      formulario.hidden = true;
+      mensaje.textContent = resultado.ok
+        ? 'Gracias, recibimos tu reporte. Un administrador lo va a revisar.'
+        : resultado.error;
+      mensaje.hidden = false;
+    });
+  }
+
   function pintarContactar(anuncio) {
     var usuarioActual = EC.datos.obtenerUsuarioActual();
     var boton = document.getElementById('pub-contactar');
@@ -101,15 +197,7 @@
 
     document.getElementById('pub-favorito').setAttribute('data-id', anuncio.id);
 
-    var fotoContenedor = document.getElementById('pub-foto-contenedor');
-    var fotoImg = document.getElementById('pub-foto');
-    if (anuncio.foto) {
-      fotoImg.src = anuncio.foto;
-      fotoImg.alt = anuncio.titulo;
-      fotoContenedor.hidden = false;
-    } else {
-      fotoContenedor.hidden = true;
-    }
+    pintarGaleria(anuncio);
 
     document.getElementById('pub-descripcion').textContent = anuncio.descripcion;
     document.getElementById('pub-tipo').textContent = EC.util.textoTipo(anuncio.tipo);
@@ -121,9 +209,17 @@
       day: 'numeric', month: 'long', year: 'numeric'
     });
 
+    var usuarioActual = EC.datos.obtenerUsuarioActual();
+
     pintarContacto(anuncio);
     pintarAcciones(anuncio);
     pintarContactar(anuncio);
+    pintarEstadisticas(anuncio, usuarioActual);
+    pintarReportar(anuncio, usuarioActual);
+
+    if (!usuarioActual || usuarioActual.id !== anuncio.propietarioId) {
+      EC.datos.registrarVisita(anuncio.id);
+    }
   }
 
   function iniciar() {

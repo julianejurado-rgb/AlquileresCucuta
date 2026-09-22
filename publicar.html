@@ -98,14 +98,14 @@
         </div>
 
         <div class="campo">
-          <label for="foto">Foto (opcional)</label>
-          <input type="file" id="foto" name="foto" accept="image/*">
-          <span class="campo__ayuda">Se comprime automáticamente antes de guardarse.</span>
+          <label for="foto">Fotos (opcional, hasta 10)</label>
+          <input type="file" id="foto" name="foto" accept="image/*" multiple>
+          <span class="campo__ayuda">Se comprimen automáticamente antes de guardarse. Puedes seleccionar varias a la vez.</span>
         </div>
 
         <div class="vista-previa" id="vista-previa" hidden>
-          <img id="vista-previa-img" src="" alt="Vista previa de la foto">
-          <button type="button" id="quitar-foto" class="boton boton--secundario boton--pequeno">Quitar foto</button>
+          <p class="vista-previa__contador" id="vista-previa-contador"></p>
+          <ul class="vista-previa__lista" id="vista-previa-lista"></ul>
         </div>
 
         <div class="acciones-formulario">

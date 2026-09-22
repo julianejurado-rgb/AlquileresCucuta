@@ -54,8 +54,11 @@
         </div>
       </header>
 
-      <figure class="publicacion__foto" id="pub-foto-contenedor">
-        <img id="pub-foto" src="" alt="">
+      <figure class="publicacion__galeria" id="pub-foto-contenedor">
+        <div class="publicacion__galeria-principal">
+          <img id="pub-foto" src="" alt="">
+        </div>
+        <ul class="publicacion__galeria-miniaturas" id="pub-galeria-miniaturas"></ul>
       </figure>
 
       <section class="publicacion__descripcion" aria-labelledby="titulo-descripcion">
@@ -80,6 +83,17 @@
         </dl>
       </section>
 
+      <section class="publicacion__estadisticas" id="seccion-estadisticas" aria-labelledby="titulo-estadisticas" hidden>
+        <h2 id="titulo-estadisticas">Estadísticas (solo tú las ves)</h2>
+        <dl class="ficha">
+          <dt>Visitas</dt>
+          <dd id="stat-visitas">0</dd>
+
+          <dt>Personas que te han contactado</dt>
+          <dd id="stat-contactos">0</dd>
+        </dl>
+      </section>
+
       <section class="publicacion__contacto" aria-labelledby="titulo-contacto">
         <h2 id="titulo-contacto">Contacto con el anunciante</h2>
         <address class="contacto" id="pub-contacto"></address>
@@ -87,6 +101,34 @@
         <p id="pub-contactar-ayuda" class="contacto__ayuda" hidden>
           <a href="acceder.html">Inicia sesión</a> para contactar al anunciante por chat.
         </p>
+      </section>
+
+      <section class="publicacion__reportar" id="seccion-reportar" aria-labelledby="titulo-reportar">
+        <h2 id="titulo-reportar" class="visualmente-oculto">Reportar anuncio</h2>
+        <button type="button" id="pub-reportar-boton" class="boton boton--secundario" hidden>Reportar este anuncio</button>
+        <p id="pub-reportar-mensaje" class="contacto__ayuda" hidden></p>
+
+        <form id="form-reportar" class="form-reportar" hidden>
+          <div class="campo">
+            <label for="reportar-motivo">Motivo</label>
+            <select id="reportar-motivo" required>
+              <option value="">Selecciona un motivo</option>
+              <option value="fraudulento">Anuncio fraudulento</option>
+              <option value="informacion-falsa">Información falsa</option>
+              <option value="contenido-inapropiado">Contenido inapropiado</option>
+              <option value="precio-enganoso">Precio engañoso</option>
+              <option value="otro">Otro motivo</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="reportar-descripcion">Detalles (opcional)</label>
+            <textarea id="reportar-descripcion" rows="3" maxlength="500" placeholder="Cuéntanos qué está mal con este anuncio..."></textarea>
+          </div>
+          <div class="acciones-formulario">
+            <button type="submit" class="boton boton--peligro boton--pequeno">Enviar reporte</button>
+            <button type="button" id="reportar-cancelar" class="boton boton--secundario boton--pequeno">Cancelar</button>
+          </div>
+        </form>
       </section>
 
     </article>

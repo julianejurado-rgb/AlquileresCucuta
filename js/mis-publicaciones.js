@@ -12,9 +12,10 @@
 
     var figura = document.createElement('figure');
     figura.className = 'anuncio__foto';
-    if (anuncio.foto) {
+    var fotos = EC.util.obtenerFotos(anuncio);
+    if (fotos.length > 0) {
       var img = document.createElement('img');
-      img.src = anuncio.foto;
+      img.src = fotos[0];
       img.alt = anuncio.titulo;
       figura.appendChild(img);
     } else {
@@ -50,6 +51,12 @@
     badge.textContent = EC.util.textoEstado(anuncio.estado);
     estadoParrafo.appendChild(badge);
     cuerpo.appendChild(estadoParrafo);
+
+    var estadisticas = document.createElement('p');
+    estadisticas.className = 'anuncio__meta';
+    var contactos = EC.datos.obtenerConversacionesDeAnuncio(anuncio.id).length;
+    estadisticas.textContent = (anuncio.visitas || 0) + ' visitas · ' + contactos + ' contactos';
+    cuerpo.appendChild(estadisticas);
 
     var acciones = document.createElement('div');
     acciones.className = 'anuncio__acciones';

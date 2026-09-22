@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Anuncios publicados por un propietario en EstudioCúcuta.">
+  <title>Propietario — EstudioCúcuta</title>
+  <link rel="stylesheet" href="css/propietario.css">
+  <script src="js/datos.js" defer></script>
+  <script src="js/nav.js" defer></script>
+  <script src="js/favoritos.js" defer></script>
+  <script src="js/propietario.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">EstudioCúcuta</a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <a href="index.html">Anuncios</a>
+        <a href="acceder.html">Iniciar sesión</a>
+        <a href="registro.html">Registrarse</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <p class="volver">
+      <a href="index.html">&larr; Volver a los anuncios</a>
+    </p>
+
+    <p id="no-encontrado" class="sin-anuncios" hidden>
+      Este usuario no existe o no está disponible.
+    </p>
+
+    <div id="perfil-usuario" hidden>
+      <header class="perfil-publico__cabecera">
+        <h1 id="propietario-nombre"></h1>
+        <p id="propietario-meta" class="perfil-publico__meta"></p>
+      </header>
+
+      <section class="feed" aria-labelledby="titulo-anuncios-propietario">
+        <h2 id="titulo-anuncios-propietario">Anuncios publicados</h2>
+
+        <p id="sin-anuncios-propietario" class="sin-anuncios" hidden>
+          Este usuario no tiene anuncios publicados por ahora.
+        </p>
+
+        <ul class="grid-anuncios" id="grid-anuncios-propietario"></ul>
+      </section>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EstudioCúcuta — Proyecto académico.</p>
+  </footer>
+
+</body>
+</html>

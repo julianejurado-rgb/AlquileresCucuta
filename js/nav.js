@@ -27,7 +27,12 @@ window.EC = window.EC || {};
       html += '</a>';
 
       if (usuario.rol === 'administrador') {
-        html += '<a href="admin.html">Panel admin</a>';
+        var reportesPendientes = EC.datos.contarReportesPendientes();
+        html += '<a href="admin.html">Panel admin';
+        if (reportesPendientes > 0) {
+          html += ' <span class="main-nav__badge">' + reportesPendientes + '</span>';
+        }
+        html += '</a>';
       }
       html += '<a href="perfil.html" class="main-nav__usuario">Hola, ' + EC.util.escaparHtml(usuario.nombre) + '</a>';
       html += '<button type="button" id="cerrar-sesion" class="main-nav__salir">Cerrar sesión</button>';

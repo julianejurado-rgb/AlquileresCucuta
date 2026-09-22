@@ -158,20 +158,49 @@ a:hover { text-decoration: underline; }
   color: #777;
 }
 
-/* ===== Vista previa de foto ===== */
-.vista-previa {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+/* ===== Vista previa de fotos ===== */
+.vista-previa__contador {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.5rem;
 }
 
-.vista-previa img {
-  width: 120px;
-  height: 90px;
+.vista-previa__lista {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.6rem;
+}
+
+.vista-previa__item {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.vista-previa__item img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 6px;
   background: #efefef;
 }
+
+.vista-previa__quitar {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.vista-previa__quitar:hover { background: #c62828; }
 
 /* ===== Mensajes ===== */
 .mensaje {

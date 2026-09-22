@@ -7,8 +7,7 @@
   var ANCHO_MAXIMO_FOTO = 900;
   var TAMANO_MAXIMO_ARCHIVO = 8 * 1024 * 1024;
 
-  var fotoActual = null;   // dataURL de la foto nueva, o null si no ha cambiado
-  var fotoEliminada = false;
+  var fotosActuales = [];   // dataURLs de las fotos del anuncio (hasta MAXIMO_FOTOS)
 
   function mostrarError(mensaje) {
     var el = document.getElementById('mensaje-error');
@@ -24,7 +23,7 @@
   function procesarImagen(archivo) {
     return new Promise(function (resolve, reject) {
       if (archivo.size > TAMANO_MAXIMO_ARCHIVO) {
-        reject(new Error('La imagen no debe superar 8 MB.'));
+        reject(new Error('"' + archivo.name + '" no debe superar 8 MB.'));
         return;
       }
 
@@ -40,24 +39,50 @@
           ctx.drawImage(imagen, 0, 0, canvas.width, canvas.height);
           resolve(canvas.toDataURL('image/jpeg', 0.82));
         };
-        imagen.onerror = function () { reject(new Error('No se pudo leer la imagen seleccionada.')); };
+        imagen.onerror = function () { reject(new Error('No se pudo leer la imagen "' + archivo.name + '".')); };
         imagen.src = lector.result;
       };
-      lector.onerror = function () { reject(new Error('No se pudo leer el archivo seleccionado.')); };
+      lector.onerror = function () { reject(new Error('No se pudo leer el archivo "' + archivo.name + '".')); };
       lector.readAsDataURL(archivo);
     });
   }
 
-  function mostrarVistaPrevia(dataUrl) {
+  function renderizarVistaPrevia() {
     var contenedor = document.getElementById('vista-previa');
-    var img = document.getElementById('vista-previa-img');
-    img.src = dataUrl;
-    contenedor.hidden = false;
-  }
+    var lista = document.getElementById('vista-previa-lista');
+    var contador = document.getElementById('vista-previa-contador');
 
-  function ocultarVistaPrevia() {
-    document.getElementById('vista-previa').hidden = true;
-    document.getElementById('vista-previa-img').src = '';
+    lista.innerHTML = '';
+
+    if (fotosActuales.length === 0) {
+      contenedor.hidden = true;
+      return;
+    }
+    contenedor.hidden = false;
+    contador.textContent = fotosActuales.length + ' / ' + EC.util.MAXIMO_FOTOS + ' fotos';
+
+    fotosActuales.forEach(function (dataUrl, indice) {
+      var li = document.createElement('li');
+      li.className = 'vista-previa__item';
+
+      var img = document.createElement('img');
+      img.src = dataUrl;
+      img.alt = 'Foto ' + (indice + 1) + ' del anuncio';
+      li.appendChild(img);
+
+      var quitar = document.createElement('button');
+      quitar.type = 'button';
+      quitar.className = 'vista-previa__quitar';
+      quitar.setAttribute('aria-label', 'Quitar esta foto');
+      quitar.textContent = '×';
+      quitar.addEventListener('click', function () {
+        fotosActuales.splice(indice, 1);
+        renderizarVistaPrevia();
+      });
+      li.appendChild(quitar);
+
+      lista.appendChild(li);
+    });
   }
 
   function leerFormulario() {
@@ -92,7 +117,8 @@
     document.getElementById('estado').value = anuncio.estado;
     document.getElementById('telefono').value = anuncio.telefono || '';
     document.getElementById('descripcion').value = anuncio.descripcion;
-    if (anuncio.foto) mostrarVistaPrevia(anuncio.foto);
+    fotosActuales = EC.util.obtenerFotos(anuncio).slice();
+    renderizarVistaPrevia();
   }
 
   function iniciar() {
@@ -120,25 +146,28 @@
     }
 
     document.getElementById('foto').addEventListener('change', function (evento) {
-      var archivo = evento.target.files[0];
-      if (!archivo) return;
+      var archivos = Array.prototype.slice.call(evento.target.files);
+      evento.target.value = '';
+      if (archivos.length === 0) return;
 
       ocultarError();
-      procesarImagen(archivo).then(function (dataUrl) {
-        fotoActual = dataUrl;
-        fotoEliminada = false;
-        mostrarVistaPrevia(dataUrl);
+
+      var espacioDisponible = EC.util.MAXIMO_FOTOS - fotosActuales.length;
+      if (espacioDisponible <= 0) {
+        mostrarError('Ya tienes el máximo de ' + EC.util.MAXIMO_FOTOS + ' fotos.');
+        return;
+      }
+      if (archivos.length > espacioDisponible) {
+        mostrarError('Solo puedes agregar ' + espacioDisponible + ' foto(s) más (máximo ' + EC.util.MAXIMO_FOTOS + ').');
+        archivos = archivos.slice(0, espacioDisponible);
+      }
+
+      Promise.all(archivos.map(procesarImagen)).then(function (dataUrls) {
+        fotosActuales = fotosActuales.concat(dataUrls);
+        renderizarVistaPrevia();
       }).catch(function (error) {
         mostrarError(error.message);
-        evento.target.value = '';
       });
-    });
-
-    document.getElementById('quitar-foto').addEventListener('click', function () {
-      fotoActual = null;
-      fotoEliminada = true;
-      document.getElementById('foto').value = '';
-      ocultarVistaPrevia();
     });
 
     document.getElementById('form-publicar').addEventListener('submit', function (evento) {
@@ -152,15 +181,7 @@
         return;
       }
 
-      if (fotoActual) {
-        datos.foto = fotoActual;
-      } else if (fotoEliminada) {
-        datos.foto = '';
-      } else if (anuncioExistente) {
-        datos.foto = anuncioExistente.foto || '';
-      } else {
-        datos.foto = '';
-      }
+      datos.fotos = fotosActuales;
 
       if (anuncioExistente) {
         EC.datos.actualizarAnuncio(anuncioExistente.id, datos);
