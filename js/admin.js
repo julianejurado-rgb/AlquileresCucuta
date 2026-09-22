@@ -211,8 +211,70 @@
     });
   }
 
+  function renderizarVerificaciones() {
+    var cuerpo = document.getElementById('cuerpo-tabla-verificaciones');
+    var vacio = document.getElementById('sin-verificaciones');
+    var solicitudes = EC.datos.obtenerSolicitudesVerificacionPendientes();
+
+    document.getElementById('conteo-verificaciones').textContent = solicitudes.length;
+    cuerpo.innerHTML = '';
+
+    if (solicitudes.length === 0) {
+      vacio.hidden = false;
+      return;
+    }
+    vacio.hidden = true;
+
+    solicitudes.forEach(function (solicitud) {
+      var solicitante = EC.datos.obtenerUsuarioPorId(solicitud.usuarioId);
+      var fila = document.createElement('tr');
+
+      var celdaUsuario = document.createElement('td');
+      if (solicitante) {
+        var enlaceUsuario = document.createElement('a');
+        enlaceUsuario.href = 'propietario.html?id=' + encodeURIComponent(solicitante.id);
+        enlaceUsuario.textContent = solicitante.nombre;
+        celdaUsuario.appendChild(enlaceUsuario);
+      } else {
+        celdaUsuario.textContent = '(usuario eliminado)';
+      }
+      fila.appendChild(celdaUsuario);
+
+      fila.appendChild(crearCelda(solicitante ? solicitante.correo : '—'));
+
+      var fecha = new Date(solicitud.fecha);
+      fila.appendChild(crearCelda(fecha.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })));
+
+      var celdaAcciones = document.createElement('td');
+      celdaAcciones.className = 'tabla__acciones';
+
+      var aceptar = document.createElement('button');
+      aceptar.type = 'button';
+      aceptar.className = 'boton boton--secundario boton--pequeno';
+      aceptar.textContent = 'Aceptar';
+      aceptar.addEventListener('click', function () {
+        EC.datos.resolverSolicitudVerificacion(solicitud.id, true);
+        renderizarVerificaciones();
+      });
+      celdaAcciones.appendChild(aceptar);
+
+      var rechazar = document.createElement('button');
+      rechazar.type = 'button';
+      rechazar.className = 'boton boton--peligro boton--pequeno';
+      rechazar.textContent = 'Rechazar';
+      rechazar.addEventListener('click', function () {
+        EC.datos.resolverSolicitudVerificacion(solicitud.id, false);
+        renderizarVerificaciones();
+      });
+      celdaAcciones.appendChild(rechazar);
+
+      fila.appendChild(celdaAcciones);
+      cuerpo.appendChild(fila);
+    });
+  }
+
   function activarPestana(nombre) {
-    ['anuncios', 'usuarios', 'reportes'].forEach(function (clave) {
+    ['anuncios', 'usuarios', 'reportes', 'verificaciones'].forEach(function (clave) {
       document.getElementById('tab-' + clave).hidden = clave !== nombre;
       document.getElementById('pestana-' + clave).classList.toggle('panel__tab--activo', clave === nombre);
     });
@@ -225,6 +287,7 @@
     renderizarAnuncios();
     renderizarUsuarios();
     renderizarReportes();
+    renderizarVerificaciones();
 
     document.querySelectorAll('.panel__tab').forEach(function (boton) {
       boton.addEventListener('click', function () {

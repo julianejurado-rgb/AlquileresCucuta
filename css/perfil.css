@@ -39,6 +39,9 @@
 [hidden] { display: none !important; }
 
 body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--fuente-cuerpo);
   line-height: 1.6;
   color: var(--color-texto);
@@ -130,6 +133,7 @@ h1, h2 { font-family: var(--fuente-display); font-weight: 600; letter-spacing: -
 
 /* ===== Contenido principal ===== */
 .pagina-perfil {
+  flex: 1;
   max-width: 680px;
   width: 92%;
   margin: 0 auto;
@@ -182,6 +186,14 @@ h1, h2 { font-family: var(--fuente-display); font-weight: 600; letter-spacing: -
 
 .insignia-rol--administrador { background: #E1EDF7; color: #1D4E80; }
 .insignia-rol--usuario { background: var(--color-primario-suave); color: var(--color-primario-oscuro); }
+
+.insignia-verificado {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 0.3rem;
+  color: var(--color-primario);
+}
+.insignia-verificado svg { display: block; }
 
 /* ===== Campos de formulario ===== */
 #form-datos,

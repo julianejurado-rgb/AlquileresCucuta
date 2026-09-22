@@ -45,6 +45,9 @@
         <button type="button" class="panel__tab" id="pestana-reportes" data-tab="reportes">
           Reportes pendientes (<span id="conteo-reportes">0</span>)
         </button>
+        <button type="button" class="panel__tab" id="pestana-verificaciones" data-tab="verificaciones">
+          Verificaciones (<span id="conteo-verificaciones">0</span>)
+        </button>
       </div>
 
       <section id="tab-anuncios" class="panel__tab-contenido">
@@ -97,6 +100,23 @@
               </tr>
             </thead>
             <tbody id="cuerpo-tabla-reportes"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="tab-verificaciones" class="panel__tab-contenido" hidden>
+        <p id="sin-verificaciones" class="sin-anuncios" hidden>No hay solicitudes de verificación pendientes.</p>
+        <div class="tabla-scroll">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Correo</th>
+                <th>Fecha solicitada</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-verificaciones"></tbody>
           </table>
         </div>
       </section>

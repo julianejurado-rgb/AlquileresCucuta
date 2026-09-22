@@ -95,7 +95,11 @@
 
     document.title = propietario.nombre + ' — EstudioCúcuta';
     document.getElementById('perfil-usuario').hidden = false;
-    document.getElementById('propietario-nombre').textContent = propietario.nombre;
+
+    var nombreEl = document.getElementById('propietario-nombre');
+    nombreEl.innerHTML = '';
+    nombreEl.appendChild(document.createTextNode(propietario.nombre));
+    if (propietario.verificado) nombreEl.appendChild(EC.util.crearInsigniaVerificado());
 
     var anuncios = EC.datos.obtenerAnunciosDeUsuario(propietario.id);
     document.getElementById('propietario-meta').textContent =

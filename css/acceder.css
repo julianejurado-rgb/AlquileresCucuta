@@ -39,6 +39,9 @@
 [hidden] { display: none !important; }
 
 body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   font-family: var(--fuente-cuerpo);
   line-height: 1.6;
   color: var(--color-texto);
@@ -130,6 +133,7 @@ h1 { font-family: var(--fuente-display); font-weight: 600; letter-spacing: -0.01
 
 /* ===== Contenido principal ===== */
 .pagina-formulario {
+  flex: 1;
   max-width: 1080px;
   width: 92%;
   margin: 0 auto;

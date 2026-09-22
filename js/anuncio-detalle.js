@@ -26,6 +26,7 @@
     enlacePropietario.href = 'propietario.html?id=' + encodeURIComponent(propietario.id);
     enlacePropietario.textContent = propietario.nombre;
     linea1.appendChild(enlacePropietario);
+    if (propietario.verificado) linea1.appendChild(EC.util.crearInsigniaVerificado());
     contacto.appendChild(linea1);
 
     var linea2 = document.createElement('span');
@@ -127,17 +128,21 @@
     document.getElementById(idValor).textContent = valor + (sufijo || '');
   }
 
+  function mostrarFilaSiNo(idFila, idValor, valor, textoFn) {
+    var fila = document.getElementById(idFila);
+    if (valor === 'si' || valor === 'no') {
+      fila.hidden = false;
+      document.getElementById(idValor).textContent = textoFn(valor);
+    } else {
+      fila.hidden = true;
+    }
+  }
+
   function pintarFichaOpcional(anuncio) {
     mostrarFilaOpcional('fila-area', 'pub-area', anuncio.area, ' m²', ' m²');
+    mostrarFilaSiNo('fila-amoblado', 'pub-amoblado', anuncio.amoblado, EC.util.textoAmoblado);
     document.getElementById('pub-genero').textContent = EC.util.textoGeneroPermitido(anuncio.generoPermitido);
-
-    var filaMascotas = document.getElementById('fila-mascotas');
-    if (anuncio.mascotas === 'si' || anuncio.mascotas === 'no') {
-      filaMascotas.hidden = false;
-      document.getElementById('pub-mascotas').textContent = EC.util.textoMascotas(anuncio.mascotas);
-    } else {
-      filaMascotas.hidden = true;
-    }
+    mostrarFilaSiNo('fila-mascotas', 'pub-mascotas', anuncio.mascotas, EC.util.textoMascotas);
 
     document.getElementById('pub-visualizaciones').textContent = anuncio.visitas || 0;
   }

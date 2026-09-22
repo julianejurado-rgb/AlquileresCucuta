@@ -96,12 +96,23 @@
           </div>
         </div>
 
-        <div class="fila-campos fila-campos--tres">
+        <div class="fila-campos">
           <div class="campo">
             <label for="area">Área en m² (opcional)</label>
             <input type="number" id="area" name="area" min="1" step="1" placeholder="Ej: 45">
           </div>
 
+          <div class="campo">
+            <label for="amoblado">Amoblado</label>
+            <select id="amoblado" name="amoblado">
+              <option value="no-especificado">No especificado</option>
+              <option value="si">Sí, amoblado</option>
+              <option value="no">No amoblado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fila-campos">
           <div class="campo">
             <label for="genero-permitido">Género permitido</label>
             <select id="genero-permitido" name="genero-permitido">

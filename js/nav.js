@@ -31,10 +31,10 @@ window.EC = window.EC || {};
       html += '<a href="mis-publicaciones.html">Mis publicaciones</a>';
 
       if (usuario.rol === 'administrador') {
-        var reportesPendientes = EC.datos.contarReportesPendientes();
+        var pendientesAdmin = EC.datos.contarReportesPendientes() + EC.datos.contarSolicitudesVerificacionPendientes();
         html += '<a href="admin.html">Panel admin';
-        if (reportesPendientes > 0) {
-          html += ' <span class="main-nav__badge">' + reportesPendientes + '</span>';
+        if (pendientesAdmin > 0) {
+          html += ' <span class="main-nav__badge">' + pendientesAdmin + '</span>';
         }
         html += '</a>';
       }

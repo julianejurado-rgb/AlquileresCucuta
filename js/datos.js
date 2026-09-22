@@ -14,6 +14,7 @@ window.EC = window.EC || {};
   var CLAVE_CONVERSACIONES = 'ec_conversaciones';
   var CLAVE_MENSAJES = 'ec_mensajes';
   var CLAVE_REPORTES = 'ec_reportes';
+  var CLAVE_VERIFICACIONES = 'ec_verificaciones';
   var MAXIMO_FOTOS = 10;
 
   function leer(clave, porDefecto) {
@@ -60,7 +61,8 @@ window.EC = window.EC || {};
   var ICONOS_SPECS = {
     area: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
     genero: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>',
-    mascota: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="9.5" r="1.8"/><circle cx="10.5" cy="5.5" r="1.8"/><circle cx="15.5" cy="5.5" r="1.8"/><circle cx="19.5" cy="10.5" r="1.8"/><path d="M6 21c-1.5 0-2.5-1.4-2-2.8.8-2.3 3.1-5.2 8-5.2s7.2 2.9 8 5.2c.5 1.4-.5 2.8-2 2.8-2 0-3-1-6-1s-4 1-6 1z"/></svg>'
+    mascota: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="9.5" r="1.8"/><circle cx="10.5" cy="5.5" r="1.8"/><circle cx="15.5" cy="5.5" r="1.8"/><circle cx="19.5" cy="10.5" r="1.8"/><path d="M6 21c-1.5 0-2.5-1.4-2-2.8.8-2.3 3.1-5.2 8-5.2s7.2 2.9 8 5.2c.5 1.4-.5 2.8-2 2.8-2 0-3-1-6-1s-4 1-6 1z"/></svg>',
+    amoblado: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4H4z"/><path d="M2 12.5V16a1 1 0 0 0 1 1h1"/><path d="M22 12.5V16a1 1 0 0 1-1 1h-1"/><path d="M4 17v3"/><path d="M20 17v3"/></svg>'
   };
 
   var TEXTO_GENERO_PERMITIDO = {
@@ -74,15 +76,21 @@ window.EC = window.EC || {};
     no: 'No admite mascotas'
   };
 
+  var TEXTO_AMOBLADO = {
+    si: 'Amoblado',
+    no: 'No amoblado'
+  };
+
   function textoGeneroPermitido(valor) { return TEXTO_GENERO_PERMITIDO[valor] || TEXTO_GENERO_PERMITIDO.todos; }
   function textoMascotas(valor) { return TEXTO_MASCOTAS[valor] || ''; }
+  function textoAmoblado(valor) { return TEXTO_AMOBLADO[valor] || ''; }
 
-  /* Fila compacta de specs con ícono (m², género permitido, mascotas)
-     para las tarjetas de anuncio. Devuelve null si el anuncio no tiene
-     ninguno de esos datos "notables" (son todos opcionales u omiten
-     valores neutros como "todos los géneros"). Los íconos son SVG fijos
-     definidos aquí mismo, nunca texto del usuario, así que innerHTML
-     es seguro; los valores del anuncio van por textContent. */
+  /* Fila compacta de specs con ícono (m², género permitido, mascotas,
+     amoblado) para las tarjetas de anuncio. Devuelve null si el anuncio
+     no tiene ninguno de esos datos "notables" (son todos opcionales u
+     omiten valores neutros como "todos los géneros"). Los íconos son
+     SVG fijos definidos aquí mismo, nunca texto del usuario, así que
+     innerHTML es seguro; los valores del anuncio van por textContent. */
   function crearFilaSpecs(anuncio) {
     var specs = [];
 
@@ -94,6 +102,9 @@ window.EC = window.EC || {};
     }
     if (anuncio.mascotas === 'si' || anuncio.mascotas === 'no') {
       specs.push({ icono: ICONOS_SPECS.mascota, texto: textoMascotas(anuncio.mascotas) });
+    }
+    if (anuncio.amoblado === 'si' || anuncio.amoblado === 'no') {
+      specs.push({ icono: ICONOS_SPECS.amoblado, texto: textoAmoblado(anuncio.amoblado) });
     }
 
     if (specs.length === 0) return null;
@@ -119,6 +130,19 @@ window.EC = window.EC || {};
     });
 
     return contenedor;
+  }
+
+  var ICONO_VERIFICADO = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 12.3l2.6 2.6L16 9.3" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /* Chulito de "usuario verificado" para poner junto a un nombre.
+     Ícono SVG fijo definido aquí, nunca texto del usuario. */
+  function crearInsigniaVerificado() {
+    var span = document.createElement('span');
+    span.className = 'insignia-verificado';
+    span.setAttribute('aria-label', 'Usuario verificado');
+    span.title = 'Usuario verificado';
+    span.innerHTML = ICONO_VERIFICADO;
+    return span;
   }
 
   function formatearPrecio(numero) {
@@ -263,6 +287,9 @@ window.EC = window.EC || {};
     guardarAnuncios(obtenerAnuncios().filter(function (anuncio) { return anuncio.propietarioId !== id; }));
     guardarReportes(obtenerReportes().filter(function (reporte) {
       return reporte.reportadoPorId !== id && anunciosDelUsuario.indexOf(reporte.anuncioId) === -1;
+    }));
+    guardarSolicitudesVerificacion(obtenerSolicitudesVerificacion().filter(function (solicitud) {
+      return solicitud.usuarioId !== id;
     }));
   }
 
@@ -614,6 +641,77 @@ window.EC = window.EC || {};
     return actualizado;
   }
 
+  /* ===== Verificación de usuarios =====
+     Un usuario puede pedir que un administrador verifique su cuenta;
+     mientras no la resuelva, queda "pendiente". Si la aprueba, el
+     usuario pasa a usuario.verificado = true y su nombre aparece con
+     un chulito en los anuncios. */
+
+  function obtenerSolicitudesVerificacion() {
+    return leer(CLAVE_VERIFICACIONES, []);
+  }
+
+  function guardarSolicitudesVerificacion(solicitudes) {
+    guardar(CLAVE_VERIFICACIONES, solicitudes);
+  }
+
+  function obtenerSolicitudVerificacionPendienteDeUsuario(usuarioId) {
+    var encontrada = null;
+    obtenerSolicitudesVerificacion().forEach(function (solicitud) {
+      if (solicitud.usuarioId === usuarioId && solicitud.estado === 'pendiente') encontrada = solicitud;
+    });
+    return encontrada;
+  }
+
+  function obtenerSolicitudesVerificacionPendientes() {
+    return obtenerSolicitudesVerificacion().filter(function (solicitud) { return solicitud.estado === 'pendiente'; });
+  }
+
+  function contarSolicitudesVerificacionPendientes() {
+    return obtenerSolicitudesVerificacionPendientes().length;
+  }
+
+  function solicitarVerificacion(usuarioId) {
+    var usuario = obtenerUsuarioPorId(usuarioId);
+    if (!usuario) return { ok: false, error: 'Usuario no encontrado.' };
+    if (usuario.verificado) return { ok: false, error: 'Tu cuenta ya está verificada.' };
+    if (obtenerSolicitudVerificacionPendienteDeUsuario(usuarioId)) {
+      return { ok: false, error: 'Ya tienes una solicitud de verificación pendiente.' };
+    }
+
+    var solicitudes = obtenerSolicitudesVerificacion();
+    var solicitud = {
+      id: generarId('verificacion'),
+      usuarioId: usuarioId,
+      fecha: new Date().toISOString(),
+      estado: 'pendiente'
+    };
+    solicitudes.push(solicitud);
+    guardarSolicitudesVerificacion(solicitudes);
+    return { ok: true, solicitud: solicitud };
+  }
+
+  function resolverSolicitudVerificacion(id, aprobar) {
+    var solicitudes = obtenerSolicitudesVerificacion();
+    var actualizada = false;
+    var usuarioId = null;
+
+    solicitudes = solicitudes.map(function (solicitud) {
+      if (solicitud.id !== id) return solicitud;
+      actualizada = true;
+      usuarioId = solicitud.usuarioId;
+      var copia = {};
+      for (var clave in solicitud) copia[clave] = solicitud[clave];
+      copia.estado = aprobar ? 'aprobada' : 'rechazada';
+      return copia;
+    });
+
+    if (!actualizada) return false;
+    guardarSolicitudesVerificacion(solicitudes);
+    if (aprobar) actualizarUsuario(usuarioId, { verificado: true });
+    return true;
+  }
+
   sembrarAdministrador();
   fusionarConversacionesDuplicadas();
 
@@ -626,8 +724,10 @@ window.EC = window.EC || {};
     textoMotivoReporte: textoMotivoReporte,
     textoGeneroPermitido: textoGeneroPermitido,
     textoMascotas: textoMascotas,
+    textoAmoblado: textoAmoblado,
     obtenerFotos: obtenerFotos,
     crearFilaSpecs: crearFilaSpecs,
+    crearInsigniaVerificado: crearInsigniaVerificado,
     MAXIMO_FOTOS: MAXIMO_FOTOS
   };
 
@@ -665,6 +765,11 @@ window.EC = window.EC || {};
     contarReportesPendientes: contarReportesPendientes,
     yaReportado: yaReportado,
     crearReporte: crearReporte,
-    marcarReporteResuelto: marcarReporteResuelto
+    marcarReporteResuelto: marcarReporteResuelto,
+    obtenerSolicitudVerificacionPendienteDeUsuario: obtenerSolicitudVerificacionPendienteDeUsuario,
+    obtenerSolicitudesVerificacionPendientes: obtenerSolicitudesVerificacionPendientes,
+    contarSolicitudesVerificacionPendientes: contarSolicitudesVerificacionPendientes,
+    solicitarVerificacion: solicitarVerificacion,
+    resolverSolicitudVerificacion: resolverSolicitudVerificacion
   };
 })(window.EC);

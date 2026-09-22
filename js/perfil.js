@@ -32,6 +32,37 @@
     insignia.className = 'insignia-rol insignia-rol--' + usuarioActual.rol;
   }
 
+  function pintarVerificacion() {
+    if (usuarioActual.rol === 'administrador') return;
+
+    var tarjeta = document.getElementById('tarjeta-verificacion');
+    var estado = document.getElementById('verificacion-estado');
+    var boton = document.getElementById('solicitar-verificacion');
+    tarjeta.hidden = false;
+
+    if (usuarioActual.verificado) {
+      estado.innerHTML = '';
+      estado.appendChild(document.createTextNode('Tu cuenta está verificada. '));
+      estado.appendChild(EC.util.crearInsigniaVerificado());
+      boton.hidden = true;
+      return;
+    }
+
+    var pendiente = EC.datos.obtenerSolicitudVerificacionPendienteDeUsuario(usuarioActual.id);
+    if (pendiente) {
+      estado.textContent = 'Tu solicitud está pendiente de revisión por un administrador.';
+      boton.hidden = true;
+      return;
+    }
+
+    estado.textContent = 'Aún no has solicitado la verificación de tu cuenta.';
+    boton.hidden = false;
+    boton.addEventListener('click', function () {
+      var resultado = EC.datos.solicitarVerificacion(usuarioActual.id);
+      if (resultado.ok) pintarVerificacion();
+    });
+  }
+
   function inicializarFormularioDatos() {
     document.getElementById('form-datos').addEventListener('submit', function (evento) {
       evento.preventDefault();
@@ -127,6 +158,7 @@
     if (!usuarioActual) return;
 
     pintarDatos();
+    pintarVerificacion();
     inicializarFormularioDatos();
     inicializarFormularioContrasena();
     inicializarZonaPeligro();

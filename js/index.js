@@ -2,8 +2,8 @@
    index.js — renderiza el listado de anuncios (index.html) a partir de
    los anuncios guardados en localStorage, y aplica los filtros de
    búsqueda (palabra clave, ciudad, precio máximo, tipo, género
-   permitido, mascotas) combinados con el toggle "ver solo mis
-   favoritos". Debe cargarse después de datos.js y favoritos.js.
+   permitido, mascotas, amoblado) combinados con el toggle "ver solo
+   mis favoritos". Debe cargarse después de datos.js y favoritos.js.
    ========================================================================== */
 
 (function (EC) {
@@ -68,11 +68,12 @@
     var autor = document.createElement('p');
     autor.className = 'anuncio__autor';
     if (propietario) {
-      autor.textContent = 'Publicado por ';
+      autor.appendChild(document.createTextNode('Publicado por '));
       var enlaceAutor = document.createElement('a');
       enlaceAutor.href = 'propietario.html?id=' + encodeURIComponent(propietario.id);
       enlaceAutor.textContent = propietario.nombre;
       autor.appendChild(enlaceAutor);
+      if (propietario.verificado) autor.appendChild(EC.util.crearInsigniaVerificado());
     } else {
       autor.textContent = 'Publicado por un usuario eliminado';
     }
@@ -106,6 +107,7 @@
       tipo: document.getElementById('tipo').value,
       genero: document.getElementById('genero').value,
       mascotas: document.getElementById('mascotas').value,
+      amoblado: document.getElementById('amoblado').value,
       soloFavoritos: toggleFavoritosActivo()
     };
   }
@@ -121,6 +123,7 @@
       if (generoAnuncio !== 'todos' && generoAnuncio !== criterios.genero) return false;
     }
     if (criterios.mascotas && anuncio.mascotas !== criterios.mascotas) return false;
+    if (criterios.amoblado && anuncio.amoblado !== criterios.amoblado) return false;
 
     if (criterios.q) {
       var texto = [
@@ -215,7 +218,7 @@
       TEMPORIZADOR_BUSQUEDA = window.setTimeout(aplicarFiltros, 250);
     });
 
-    ['ciudad', 'precio', 'tipo', 'genero', 'mascotas', 'orden'].forEach(function (id) {
+    ['ciudad', 'precio', 'tipo', 'genero', 'mascotas', 'amoblado', 'orden'].forEach(function (id) {
       document.getElementById(id).addEventListener('change', aplicarFiltros);
     });
 

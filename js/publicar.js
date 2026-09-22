@@ -101,6 +101,7 @@
       telefono: document.getElementById('telefono').value.trim(),
       descripcion: document.getElementById('descripcion').value.trim(),
       area: leerNumeroOpcional('area'),
+      amoblado: document.getElementById('amoblado').value,
       generoPermitido: document.getElementById('genero-permitido').value,
       mascotas: document.getElementById('mascotas').value
     };
@@ -126,6 +127,7 @@
     document.getElementById('telefono').value = anuncio.telefono || '';
     document.getElementById('descripcion').value = anuncio.descripcion;
     document.getElementById('area').value = anuncio.area != null ? anuncio.area : '';
+    document.getElementById('amoblado').value = anuncio.amoblado || 'no-especificado';
     document.getElementById('genero-permitido').value = anuncio.generoPermitido || 'todos';
     document.getElementById('mascotas').value = anuncio.mascotas || 'no-especificado';
     fotosActuales = EC.util.obtenerFotos(anuncio).slice();
