@@ -1,0 +1,6 @@
+target/
+fotos-subidas/
+.idea/
+*.iml
+.vscode/
+*.log
