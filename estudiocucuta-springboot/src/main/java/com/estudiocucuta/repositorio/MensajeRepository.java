@@ -28,7 +28,7 @@ public interface MensajeRepository extends JpaRepository<Mensaje, Long> {
     long contarNoLeidos(@Param("conversacion") Conversacion conversacion, @Param("usuario") Usuario usuario);
 
     @Query("select count(distinct m.conversacion.id) from Mensaje m "
-            + "where (m.conversacion.usuario1 = :usuario or m.conversacion.usuario2 = :usuario) "
+            + "where (m.conversacion.propietario = :usuario or m.conversacion.interesado = :usuario) "
             + "and m.leido = false and (m.remitente is null or m.remitente <> :usuario)")
     long contarConversacionesConNoLeidos(@Param("usuario") Usuario usuario);
 

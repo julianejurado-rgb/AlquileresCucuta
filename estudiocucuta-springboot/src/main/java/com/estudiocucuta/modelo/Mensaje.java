@@ -41,6 +41,7 @@ public class Mensaje {
     @JoinColumn(name = "remitente_id")
     private Usuario remitente;
 
+    /** Mismo límite que MensajeRequest. */
     @Column(nullable = false, length = 1000)
     private String texto;
 
@@ -48,6 +49,7 @@ public class Mensaje {
     private LocalDateTime fecha;
 
     /** Lo marca quien recibe el mensaje cuando abre la conversación. */
+    @Column(nullable = false)
     private boolean leido;
 
     public Mensaje(Conversacion conversacion, Usuario remitente, String texto) {

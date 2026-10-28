@@ -153,9 +153,9 @@ public class UsuarioService {
     }
 
     /**
-     * Borra la cuenta y todo lo que depende de ella (antes eliminarUsuario en
-     * datos.js, que dejaba chats y favoritos colgando). Los chats se conservan
-     * para la otra persona, que verá "Usuario eliminado".
+     * Borra la cuenta y todo lo que depende de ella: sus anuncios, favoritos,
+     * reportes y solicitudes. Los chats se conservan para la otra persona, que
+     * verá "Usuario eliminado".
      */
     private void eliminar(Usuario usuario) {
         anuncioRepository.findByPropietarioIdOrderByFechaPublicacionDescIdDesc(usuario.getId())
@@ -165,7 +165,7 @@ public class UsuarioService {
         reporteRepository.deleteByReportadoPor(usuario);
         solicitudRepository.deleteByUsuario(usuario);
 
-        for (Conversacion conversacion : conversacionRepository.findByUsuario1OrUsuario2(usuario, usuario)) {
+        for (Conversacion conversacion : conversacionRepository.buscarDeUsuario(usuario)) {
             if (conversacion.otroParticipante(usuario.getId()) == null) {
                 conversacionRepository.delete(conversacion); // ya no queda nadie que la pueda ver
             } else {

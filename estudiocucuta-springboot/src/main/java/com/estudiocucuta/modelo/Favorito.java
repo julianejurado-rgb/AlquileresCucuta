@@ -17,8 +17,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * Anuncio que un usuario guardó. Antes era una sola lista en el
- * localStorage del navegador, compartida por todas las cuentas.
+ * Anuncio que un usuario guardó. Un mismo anuncio solo puede estar una vez
+ * en los favoritos de cada usuario (restricción única usuario + anuncio).
  *
  * Solo tiene getters (@Getter): ningún campo cambia después de crear el
  * favorito, así que no hace falta ningún setter.

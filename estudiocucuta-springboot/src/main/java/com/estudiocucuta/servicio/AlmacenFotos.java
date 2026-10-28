@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Guarda en disco las fotos que suben los usuarios y las publica en /fotos/…
- * (ver WebConfig). Antes se guardaban en base64 dentro del anuncio.
+ * (ver WebConfig). En la base de datos solo queda la ruta (ver FotoAnuncio).
  */
 @Service
 public class AlmacenFotos {

@@ -6,20 +6,19 @@ import com.estudiocucuta.modelo.Usuario;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ConversacionRepository extends JpaRepository<Conversacion, Long> {
 
-    Optional<Conversacion> findByUsuario1AndUsuario2(Usuario usuario1, Usuario usuario2);
+    Optional<Conversacion> findByPropietarioAndInteresado(Usuario propietario, Usuario interesado);
 
-    List<Conversacion> findByUsuario1OrUsuario2(Usuario usuario1, Usuario usuario2);
+    /** Todas las conversaciones del usuario, sea como propietario o como interesado. */
+    @Query("select c from Conversacion c where c.propietario = :usuario or c.interesado = :usuario")
+    List<Conversacion> buscarDeUsuario(@Param("usuario") Usuario usuario);
 
     List<Conversacion> findByAnuncioOrigen(Anuncio anuncio);
 
     /** Contactos que recibió un anuncio (conversaciones que empezaron desde él). */
     long countByAnuncioOrigen(Anuncio anuncio);
-
-    /** La pareja se guarda con el id menor primero (ver Conversacion). */
-    default Optional<Conversacion> buscarEntre(Usuario a, Usuario b) {
-        return a.getId() < b.getId() ? findByUsuario1AndUsuario2(a, b) : findByUsuario1AndUsuario2(b, a);
-    }
 }

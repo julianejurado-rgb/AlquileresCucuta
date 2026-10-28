@@ -36,9 +36,11 @@ descarga solo la primera vez.
   `EstudioCucutaApplication`).
 - **IntelliJ IDEA**: abrir la carpeta, esperar a que descargue las dependencias
   y ejecutar `EstudioCucutaApplication`.
-- **Consola**, dentro de la carpeta del proyecto: `.\mvnw spring-boot:run` en
-  Windows, o `./mvnw spring-boot:run` en Linux/Mac. Para correr la prueba:
-  `.\mvnw test`.
+- **Consola**, parado dentro de la carpeta `estudiocucuta-springboot` (con `cd
+  estudiocucuta-springboot` si estás en la raíz del repositorio):
+  `.\mvnw.cmd spring-boot:run` en Windows (PowerShell o CMD), o
+  `./mvnw spring-boot:run` en Linux/Mac. Para correr la prueba:
+  `.\mvnw.cmd test`.
 
 Luego abrir <http://localhost:8080>.
 

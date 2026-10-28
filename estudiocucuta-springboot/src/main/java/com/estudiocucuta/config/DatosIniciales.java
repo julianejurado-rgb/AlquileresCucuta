@@ -22,9 +22,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Al arrancar con la base de datos vacía crea la cuenta del administrador
- * (antes sembrarAdministrador en datos.js) y, si app.datos-demo=true, dos
- * usuarios y dos anuncios de ejemplo con las fotos de /img.
+ * Al arrancar con la base de datos vacía crea la cuenta del administrador y,
+ * si app.datos-demo=true, dos usuarios y dos anuncios de ejemplo con las
+ * fotos de /img.
  */
 @Component
 public class DatosIniciales implements CommandLineRunner {

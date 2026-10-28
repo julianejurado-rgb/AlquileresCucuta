@@ -40,9 +40,10 @@ public class SolicitudVerificacion {
     @Column(nullable = false, updatable = false)
     private LocalDateTime fecha;
 
+    /** PENDIENTE y RECHAZADA son los más largos (9). */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 9)
     private EstadoVerificacion estado = EstadoVerificacion.PENDIENTE;
 
     public SolicitudVerificacion(Usuario usuario) {

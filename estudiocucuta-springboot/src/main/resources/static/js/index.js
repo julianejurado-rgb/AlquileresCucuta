@@ -193,6 +193,16 @@
       document.getElementById(id).addEventListener('change', aplicarFiltros);
     });
 
+    // Solo se ve en pantallas angostas; en computador los filtros siempre están abiertos.
+    var plegarFiltros = document.getElementById('plegar-filtros');
+    if (plegarFiltros) {
+      plegarFiltros.addEventListener('click', function () {
+        var plegado = formulario.classList.toggle('buscador--plegado');
+        plegarFiltros.setAttribute('aria-expanded', String(!plegado));
+        plegarFiltros.textContent = plegado ? 'Mostrar filtros' : 'Ocultar filtros';
+      });
+    }
+
     var limpiarInline = document.getElementById('limpiar-filtros-inline');
     if (limpiarInline) limpiarInline.addEventListener('click', limpiarFiltros);
 

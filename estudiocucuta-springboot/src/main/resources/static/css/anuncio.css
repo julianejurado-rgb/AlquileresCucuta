@@ -378,6 +378,20 @@ main {
 }
 .insignia-verificado svg { display: block; }
 
+/* Verde de WhatsApp: los usuarios lo reconocen, aunque no sea el de la marca del sitio. */
+.contacto__whatsapp {
+  align-self: flex-start;
+  margin-top: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  background: #1F8F4E;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.contacto__whatsapp:hover { background: #18723E; text-decoration: none; }
+
 .contacto__ayuda {
   font-size: 0.85rem;
   color: var(--color-texto-tenue);

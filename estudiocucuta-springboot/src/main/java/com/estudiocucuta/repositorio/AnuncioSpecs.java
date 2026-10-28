@@ -16,7 +16,7 @@ import java.util.Locale;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * Filtros del buscador de anuncios (antes coincideConCriterios en index.js).
+ * Filtros del buscador de anuncios de la página principal.
  * Cada método devuelve una condición; si el filtro viene vacío, la condición
  * devuelve null y Spring Data simplemente la ignora.
  */

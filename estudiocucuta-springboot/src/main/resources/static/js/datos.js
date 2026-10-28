@@ -322,8 +322,9 @@ window.EC = window.EC || {};
   }
 
   /* ===== Conversaciones y mensajes =====
-     La conversación es entre dos personas, no por anuncio: si ya existe
-     una entre ese mismo par de usuarios, contactar de nuevo la reabre. */
+     La conversación es entre el propietario y el interesado, no por anuncio:
+     si el interesado ya le escribió a ese propietario (aunque fuera desde
+     otro anuncio suyo), contactar de nuevo la reabre. */
 
   function obtenerConversaciones() {
     return peticion('GET', '/api/conversaciones');

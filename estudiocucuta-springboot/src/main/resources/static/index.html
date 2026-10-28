@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Alquiler de apartaestudios y habitaciones para personas que viven solas en Cúcuta.">
   <title>EstudioCúcuta — Apartaestudios y habitaciones en alquiler</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
@@ -41,84 +42,93 @@
 
     <div class="contenido-principal">
 
-      <form class="buscador" id="form-filtros" role="search" action="#" method="get">
-        <h2 class="buscador__titulo">Filtros</h2>
-
-        <div class="campo">
-          <label for="q">Buscar por palabra clave</label>
-          <input type="search" id="q" name="q" placeholder="Ej: apartaestudio amoblado">
+      <!-- buscador--plegado solo tiene efecto en pantallas angostas (ver index.css):
+           ahí los filtros empiezan ocultos para que los anuncios se vean sin bajar tanto. -->
+      <form class="buscador buscador--plegado" id="form-filtros" role="search" action="#" method="get">
+        <div class="buscador__cabecera">
+          <h2 class="buscador__titulo">Filtros</h2>
+          <button type="button" class="enlace-boton buscador__plegar" id="plegar-filtros"
+                  aria-expanded="false" aria-controls="campos-filtros">Mostrar filtros</button>
         </div>
 
-        <div class="campo">
-          <label for="ciudad">Ciudad</label>
-          <select id="ciudad" name="ciudad">
-            <option value="">Todas</option>
-            <option value="cucuta">Cúcuta</option>
-            <option value="villa-del-rosario">Villa del Rosario</option>
-            <option value="los-patios">Los Patios</option>
-          </select>
-        </div>
+        <div class="buscador__campos" id="campos-filtros">
 
-        <div class="campo">
-          <label for="precio">Precio máximo</label>
-          <select id="precio" name="precio">
-            <option value="">Sin límite</option>
-            <option value="500000">Hasta $500.000</option>
-            <option value="800000">Hasta $800.000</option>
-            <option value="1200000">Hasta $1.200.000</option>
-          </select>
-        </div>
+          <div class="campo">
+            <label for="q">Buscar por palabra clave</label>
+            <input type="search" id="q" name="q" placeholder="Ej: apartaestudio amoblado">
+          </div>
 
-        <div class="campo">
-          <label for="tipo">Tipo de inmueble</label>
-          <select id="tipo" name="tipo">
-            <option value="">Todos</option>
-            <option value="apartaestudio">Apartaestudio</option>
-            <option value="habitacion">Habitación</option>
-            <option value="apartamento">Apartamento pequeño</option>
-          </select>
-        </div>
+          <div class="campo">
+            <label for="ciudad">Ciudad</label>
+            <select id="ciudad" name="ciudad">
+              <option value="">Todas</option>
+              <option value="cucuta">Cúcuta</option>
+              <option value="villa-del-rosario">Villa del Rosario</option>
+              <option value="los-patios">Los Patios</option>
+            </select>
+          </div>
 
-        <div class="campo">
-          <label for="genero">Género permitido</label>
-          <select id="genero" name="genero">
-            <option value="">Todos</option>
-            <option value="hombres">Hombres</option>
-            <option value="mujeres">Mujeres</option>
-          </select>
-        </div>
+          <div class="campo">
+            <label for="precio">Precio máximo</label>
+            <select id="precio" name="precio">
+              <option value="">Sin límite</option>
+              <option value="500000">Hasta $500.000</option>
+              <option value="800000">Hasta $800.000</option>
+              <option value="1200000">Hasta $1.200.000</option>
+            </select>
+          </div>
 
-        <div class="campo">
-          <label for="mascotas">Mascotas</label>
-          <select id="mascotas" name="mascotas">
-            <option value="">Todos</option>
-            <option value="true">Admite mascotas</option>
-            <option value="false">No admite mascotas</option>
-          </select>
-        </div>
+          <div class="campo">
+            <label for="tipo">Tipo de inmueble</label>
+            <select id="tipo" name="tipo">
+              <option value="">Todos</option>
+              <option value="apartaestudio">Apartaestudio</option>
+              <option value="habitacion">Habitación</option>
+              <option value="apartamento">Apartamento pequeño</option>
+            </select>
+          </div>
 
-        <div class="campo">
-          <label for="amoblado">Amoblado</label>
-          <select id="amoblado" name="amoblado">
-            <option value="">Todos</option>
-            <option value="true">Amoblado</option>
-            <option value="false">No amoblado</option>
-          </select>
-        </div>
+          <div class="campo">
+            <label for="genero">Género permitido</label>
+            <select id="genero" name="genero">
+              <option value="">Todos</option>
+              <option value="hombres">Hombres</option>
+              <option value="mujeres">Mujeres</option>
+            </select>
+          </div>
 
-        <div class="campo">
-          <label for="orden">Ordenar por</label>
-          <select id="orden" name="orden">
-            <option value="">Más recientes</option>
-            <option value="antiguos">Más antiguos</option>
-            <option value="precio-asc">Precio: menor a mayor</option>
-            <option value="precio-desc">Precio: mayor a menor</option>
-          </select>
-        </div>
+          <div class="campo">
+            <label for="mascotas">Mascotas</label>
+            <select id="mascotas" name="mascotas">
+              <option value="">Todos</option>
+              <option value="true">Admite mascotas</option>
+              <option value="false">No admite mascotas</option>
+            </select>
+          </div>
 
-        <div class="buscador__acciones">
-          <button type="submit" class="boton boton--primario">Filtrar</button>
-          <button type="reset" class="boton boton--secundario">Limpiar</button>
+          <div class="campo">
+            <label for="amoblado">Amoblado</label>
+            <select id="amoblado" name="amoblado">
+              <option value="">Todos</option>
+              <option value="true">Amoblado</option>
+              <option value="false">No amoblado</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <label for="orden">Ordenar por</label>
+            <select id="orden" name="orden">
+              <option value="">Más recientes</option>
+              <option value="antiguos">Más antiguos</option>
+              <option value="precio-asc">Precio: menor a mayor</option>
+              <option value="precio-desc">Precio: mayor a menor</option>
+            </select>
+          </div>
+
+          <div class="buscador__acciones">
+            <button type="submit" class="boton boton--primario">Filtrar</button>
+            <button type="reset" class="boton boton--secundario">Limpiar</button>
+          </div>
         </div>
       </form>
 

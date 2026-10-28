@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Favoritos por usuario (antes una sola lista por navegador en localStorage). */
+/** Anuncios que cada usuario guarda como favoritos; cada cuenta tiene su propia lista. */
 @Service
 @Transactional
 public class FavoritoService {

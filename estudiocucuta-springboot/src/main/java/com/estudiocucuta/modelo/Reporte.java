@@ -40,19 +40,22 @@ public class Reporte {
     @JoinColumn(name = "reportado_por_id", nullable = false)
     private Usuario reportadoPor;
 
+    /** El más largo es CONTENIDO_INAPROPIADO (21). */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 21)
     private MotivoReporte motivo;
 
+    /** Mismo límite que ReporteRequest. */
     @Column(length = 500)
     private String descripcion;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime fecha;
 
+    /** PENDIENTE o RESUELTO (el más largo, 9). */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 9)
     private EstadoReporte estado = EstadoReporte.PENDIENTE;
 
     public Reporte(Anuncio anuncio, Usuario reportadoPor, MotivoReporte motivo, String descripcion) {

@@ -9,9 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- * Usuario con sesión iniciada en la petición actual (antes obtenerUsuarioActual
- * en datos.js). Se busca de nuevo en la base de datos en cada petición, así
- * que si el administrador lo bloquea o lo elimina, pierde el acceso enseguida.
+ * Usuario con sesión iniciada en la petición actual. Se busca de nuevo en la
+ * base de datos en cada petición, así que si el administrador lo bloquea o
+ * lo elimina, pierde el acceso enseguida.
  */
 @Component
 public class SesionActual {

@@ -16,9 +16,10 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 /**
- * Reemplaza a proteger.js y a hashSimple de datos.js: la sesión vive en el
- * servidor (cookie JSESSIONID) y las contraseñas se guardan con BCrypt.
- * Las páginas HTML, CSS, JS e imágenes son públicas; lo que se protege es la API.
+ * La sesión vive en el servidor (cookie JSESSIONID) y las contraseñas se
+ * guardan con BCrypt. Las páginas HTML, CSS, JS e imágenes son públicas; lo
+ * que se protege es la API. proteger.js solo redirige en el navegador a quien
+ * no inició sesión: la protección real es esta.
  */
 @Configuration
 @EnableWebSecurity

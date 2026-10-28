@@ -31,11 +31,16 @@ public class FotoAnuncio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Por ejemplo /fotos/5f1c2a….jpg */
-    @Column(nullable = false, length = 255)
+    /**
+     * Por ejemplo /fotos/5f1c2a….jpg. La más larga posible es "/fotos/" (7)
+     * + un UUID (36) + ".webp" (5) = 48 caracteres; ver AlmacenFotos.
+     */
+    @Column(nullable = false, length = 48)
     private String url;
 
+    /** 0 es la portada. */
     @Setter
+    @Column(nullable = false)
     private int orden;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

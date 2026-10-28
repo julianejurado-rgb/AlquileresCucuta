@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Chat entre usuarios (antes simulado en localStorage, solo funcionaba en un mismo navegador). */
+/** Chat entre el propietario de un anuncio y la persona interesada en arrendarlo. */
 @Service
 @Transactional
 public class ConversacionService {
@@ -43,8 +43,10 @@ public class ConversacionService {
     }
 
     /**
-     * "Contactar por chat" desde un anuncio. Si esas dos personas ya tienen
-     * una conversación (aunque haya empezado en otro anuncio), se reabre esa.
+     * "Contactar por chat" desde un anuncio: quien escribe es el interesado y
+     * el dueño del anuncio es el propietario. Si el interesado ya le había
+     * escrito a ese propietario (aunque fuera desde otro anuncio), se reabre
+     * esa conversación.
      */
     public ConversacionDto obtenerOCrear(Long anuncioId, Usuario actual) {
         Anuncio anuncio = anuncioRepository.findById(anuncioId)
@@ -58,7 +60,7 @@ public class ConversacionService {
         }
 
         Usuario interesado = usuarioRepository.getReferenceById(actual.getId());
-        Conversacion conversacion = conversacionRepository.buscarEntre(propietario, interesado)
+        Conversacion conversacion = conversacionRepository.findByPropietarioAndInteresado(propietario, interesado)
                 .orElseGet(() -> conversacionRepository.save(new Conversacion(propietario, interesado, anuncio)));
         return aDto(conversacion, actual.getId());
     }
@@ -66,7 +68,7 @@ public class ConversacionService {
     /** Conversaciones del usuario, la de actividad más reciente primero. */
     @Transactional(readOnly = true)
     public List<ConversacionDto> listar(Usuario actual) {
-        return conversacionRepository.findByUsuario1OrUsuario2(actual, actual).stream()
+        return conversacionRepository.buscarDeUsuario(actual).stream()
                 .map(conversacion -> aDto(conversacion, actual.getId()))
                 .sorted(Comparator.comparing(ConversacionDto::ultimaActividad).reversed())
                 .toList();

@@ -23,17 +23,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Chat entre dos personas. Hay una sola conversación por pareja, sin
- * importar desde qué anuncio se contactaron: el id menor siempre va en
- * usuario1, así la restricción única impide duplicados (antes lo hacía
- * fusionarConversacionesDuplicadas en datos.js).
+ * Chat entre quien publicó un anuncio (propietario) y quien le escribió
+ * porque lo quiere arrendar (interesado).
  *
- * Getters generados por Lombok. usuario1/usuario2 no tienen setter: se
- * fijan en el constructor y solo se vacían con quitarParticipante(), que
- * no es un setter cualquiera (decide cuál de los dos hay que vaciar).
+ * Hay una sola conversación por propietario e interesado: si el interesado
+ * vuelve a escribir desde otro anuncio del mismo propietario, se reabre la
+ * misma. Si los papeles se invierten (el propietario se interesa en un
+ * anuncio de la otra persona), es otra conversación, con los papeles al revés.
+ *
+ * Getters generados por Lombok. propietario e interesado no tienen setter:
+ * se fijan en el constructor y solo se vacían con quitarParticipante()
+ * cuando esa persona elimina su cuenta.
  */
 @Entity
-@Table(name = "conversaciones", uniqueConstraints = @UniqueConstraint(columnNames = {"usuario1_id", "usuario2_id"}))
+@Table(name = "conversaciones", uniqueConstraints = @UniqueConstraint(columnNames = {"propietario_id", "interesado_id"}))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Conversacion {
@@ -42,14 +45,15 @@ public class Conversacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Queda vacío si ese usuario elimina su cuenta; la otra persona conserva el chat. */
+    /** Quien publicó el anuncio. Queda vacío si elimina su cuenta; el interesado conserva el chat. */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario1_id")
-    private Usuario usuario1;
+    @JoinColumn(name = "propietario_id")
+    private Usuario propietario;
 
+    /** Quien escribió desde el anuncio. Queda vacío si elimina su cuenta; el propietario conserva el chat. */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario2_id")
-    private Usuario usuario2;
+    @JoinColumn(name = "interesado_id")
+    private Usuario interesado;
 
     /** Anuncio desde el que empezó el chat; vacío si después se eliminó. */
     @Setter
@@ -64,10 +68,9 @@ public class Conversacion {
     @OrderBy("fecha ASC, id ASC")
     private List<Mensaje> mensajes = new ArrayList<>();
 
-    public Conversacion(Usuario a, Usuario b, Anuncio anuncioOrigen) {
-        boolean aPrimero = a.getId() < b.getId();
-        this.usuario1 = aPrimero ? a : b;
-        this.usuario2 = aPrimero ? b : a;
+    public Conversacion(Usuario propietario, Usuario interesado, Anuncio anuncioOrigen) {
+        this.propietario = propietario;
+        this.interesado = interesado;
         this.anuncioOrigen = anuncioOrigen;
     }
 
@@ -79,20 +82,21 @@ public class Conversacion {
     }
 
     public boolean participa(Long usuarioId) {
-        return esUsuario(usuario1, usuarioId) || esUsuario(usuario2, usuarioId);
+        return esUsuario(propietario, usuarioId) || esUsuario(interesado, usuarioId);
     }
 
     /** La otra persona del chat, o null si eliminó su cuenta. */
     public Usuario otroParticipante(Long usuarioId) {
-        return esUsuario(usuario1, usuarioId) ? usuario2 : usuario1;
+        return esUsuario(propietario, usuarioId) ? interesado : propietario;
     }
 
+    /** Vacía el lado de quien elimina su cuenta, sea el propietario o el interesado. */
     public void quitarParticipante(Long usuarioId) {
-        if (esUsuario(usuario1, usuarioId)) {
-            usuario1 = null;
+        if (esUsuario(propietario, usuarioId)) {
+            propietario = null;
         }
-        if (esUsuario(usuario2, usuarioId)) {
-            usuario2 = null;
+        if (esUsuario(interesado, usuarioId)) {
+            interesado = null;
         }
     }
 

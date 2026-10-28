@@ -29,6 +29,9 @@ import lombok.Setter;
  * fechaPublicacion y fotos solo tienen getter: el id lo asigna la base de
  * datos, fechaPublicacion se fija sola al guardar (alPublicar) y fotos se
  * administra con agregarFoto(), no con un setter.
+ *
+ * Los largos de los textos coinciden con los límites de AnuncioRequest; los
+ * de los enums, con el nombre más largo de cada uno (se guardan como texto).
  */
 @Entity
 @Table(name = "anuncios")
@@ -47,9 +50,10 @@ public class Anuncio {
     @Column(nullable = false, length = 800)
     private String descripcion;
 
+    /** El más largo es APARTAESTUDIO (13). */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 13)
     private TipoInmueble tipo;
 
     /** Canon mensual en pesos colombianos (sin centavos). */
@@ -57,18 +61,20 @@ public class Anuncio {
     @Column(nullable = false, precision = 12, scale = 0)
     private BigDecimal precio;
 
+    /** El más largo es VILLA_DEL_ROSARIO (17). */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 17)
     private Ciudad ciudad;
 
     @Setter
     @Column(nullable = false, length = 60)
     private String barrio;
 
+    /** El más largo es DISPONIBLE (10). */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 10)
     private EstadoAnuncio estado = EstadoAnuncio.DISPONIBLE;
 
     @Setter
@@ -87,12 +93,14 @@ public class Anuncio {
     @Setter
     private Boolean mascotas;
 
+    /** HOMBRES y MUJERES son los más largos (7). */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 7)
     private GeneroPermitido generoPermitido = GeneroPermitido.TODOS;
 
     @Setter
+    @Column(nullable = false)
     private int visitas;
 
     @Column(nullable = false, updatable = false)

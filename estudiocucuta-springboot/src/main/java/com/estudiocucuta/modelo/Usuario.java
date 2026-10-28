@@ -22,6 +22,9 @@ import lombok.Setter;
  * los campos que se pueden modificar después de crear el usuario: no hay
  * setId ni setRol) los genera Lombok al compilar; no están escritos aquí,
  * pero sí existen en el .class.
+ *
+ * Los enums se guardan con su nombre (EnumType.STRING), así que el largo de
+ * esas columnas es el del nombre más largo, no la cantidad de opciones.
  */
 @Entity
 @Table(name = "usuarios")
@@ -42,25 +45,30 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 150)
     private String correo;
 
-    /** Hash BCrypt, nunca la contraseña en texto plano. */
+    /** Hash BCrypt, nunca la contraseña en texto plano. Un hash BCrypt siempre mide 60 caracteres. */
     @Setter
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 60)
     private String contrasena;
 
-    /** Vacío en la cuenta del administrador. */
+    /** HOMBRE o MUJER (el más largo, 6 letras). Vacío en la cuenta del administrador. */
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
+    @Column(length = 6)
     private Genero genero;
 
+    /** USUARIO o ADMINISTRADOR (el más largo, 13 letras). Se fija al crear la cuenta. */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private Rol rol = Rol.USUARIO;
+    @Column(nullable = false, length = 13)
+    private Rol rol;
 
+    /** Si un administrador lo bloqueó, no puede iniciar sesión y sus anuncios se ocultan. */
     @Setter
+    @Column(nullable = false)
     private boolean bloqueado;
 
+    /** Se vuelve true cuando un administrador aprueba su solicitud de verificación. */
     @Setter
+    @Column(nullable = false)
     private boolean verificado;
 
     public Usuario(String nombre, String correo, String contrasena, Genero genero, Rol rol) {

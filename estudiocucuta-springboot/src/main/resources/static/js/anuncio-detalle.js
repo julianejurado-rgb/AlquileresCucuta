@@ -10,6 +10,18 @@
     return params.get('id');
   }
 
+  /* Enlace para escribir por WhatsApp con un mensaje ya escrito. Solo para
+     celulares de Colombia (10 dígitos que empiezan por 3, con o sin el 57
+     adelante): un teléfono fijo no tiene WhatsApp, así que devuelve null. */
+  function crearUrlWhatsApp(telefono, titulo) {
+    var digitos = telefono.replace(/\D/g, '');
+    if (digitos.length === 12 && digitos.indexOf('57') === 0) digitos = digitos.slice(2);
+    if (digitos.length !== 10 || digitos.charAt(0) !== '3') return null;
+
+    var mensaje = 'Hola, vi tu anuncio "' + titulo + '" en EstudioCúcuta y me interesa.';
+    return 'https://wa.me/57' + digitos + '?text=' + encodeURIComponent(mensaje);
+  }
+
   function pintarContacto(anuncio) {
     var propietario = anuncio.propietario;
     var contacto = document.getElementById('pub-contacto');
@@ -45,6 +57,17 @@
       enlaceTel.textContent = anuncio.telefono;
       linea3.appendChild(enlaceTel);
       contacto.appendChild(linea3);
+
+      var urlWhatsApp = crearUrlWhatsApp(anuncio.telefono, anuncio.titulo);
+      if (urlWhatsApp) {
+        var enlaceWhatsApp = document.createElement('a');
+        enlaceWhatsApp.href = urlWhatsApp;
+        enlaceWhatsApp.target = '_blank';
+        enlaceWhatsApp.rel = 'noopener';
+        enlaceWhatsApp.className = 'contacto__whatsapp';
+        enlaceWhatsApp.textContent = 'Escribir por WhatsApp';
+        contacto.appendChild(enlaceWhatsApp);
+      }
     }
   }
 
